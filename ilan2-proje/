@@ -1,0 +1,188 @@
+[90m= [39m[34;4mIlluminate\Support\Collection[39;24m {#5959
+    [34mall[39m: [
+      [
+        "[34mid[39m" => [35m1[39m,
+        "[34mstart_location[39m" => "[32mİstanbul[39m",
+        "[34mway_points[39m" => [
+          "[32mÇanakkale[39m",
+          "[32mBodrum[39m",
+        ],
+        "[34mend_location[39m" => "[32mİzmir[39m",
+        "[34mavailable_capacity[39m" => "[32m24980.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744208146[39;24m {#6224
+          [34mdate[39m: [36m2025-04-09 14:15:46.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744467346[39;24m {#5243
+          [34mdate[39m: [36m2025-04-12 14:15:46.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m150000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m2[39m,
+        "[34mstart_location[39m" => "[32mMersin[39m",
+        "[34mway_points[39m" => [
+          "[32mAlanya[39m",
+        ],
+        "[34mend_location[39m" => "[32mAntalya[39m",
+        "[34mavailable_capacity[39m" => "[32m15000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744035346[39;24m {#5230
+          [34mdate[39m: [36m2025-04-07 14:15:46.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744208146[39;24m {#5242
+          [34mdate[39m: [36m2025-04-09 14:15:46.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m75000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m3[39m,
+        "[34mstart_location[39m" => "[32mTrabzon[39m",
+        "[34mway_points[39m" => [
+          "[32mOrdu[39m",
+          "[32mGiresun[39m",
+        ],
+        "[34mend_location[39m" => "[32mSamsun[39m",
+        "[34mavailable_capacity[39m" => "[32m5000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1743948946[39;24m {#5244
+          [34mdate[39m: [36m2025-04-06 14:15:46.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744121746[39;24m {#6609
+          [34mdate[39m: [36m2025-04-08 14:15:46.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m45000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m4[39m,
+        "[34mstart_location[39m" => "[32mİstanbul[39m",
+        "[34mway_points[39m" => [
+          "[32mÇanakkale[39m",
+          "[32mBodrum[39m",
+        ],
+        "[34mend_location[39m" => "[32mİzmir[39m",
+        "[34mavailable_capacity[39m" => "[32m25000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744276819[39;24m {#6608
+          [34mdate[39m: [36m2025-04-10 09:20:19.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744536019[39;24m {#6607
+          [34mdate[39m: [36m2025-04-13 09:20:19.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m150000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m5[39m,
+        "[34mstart_location[39m" => "[32mMersin[39m",
+        "[34mway_points[39m" => [
+          "[32mAlanya[39m",
+        ],
+        "[34mend_location[39m" => "[32mAntalya[39m",
+        "[34mavailable_capacity[39m" => "[32m15000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744104019[39;24m {#6605
+          [34mdate[39m: [36m2025-04-08 09:20:19.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744276819[39;24m {#6606
+          [34mdate[39m: [36m2025-04-10 09:20:19.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m75000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m6[39m,
+        "[34mstart_location[39m" => "[32mTrabzon[39m",
+        "[34mway_points[39m" => [
+          "[32mOrdu[39m",
+          "[32mGiresun[39m",
+        ],
+        "[34mend_location[39m" => "[32mSamsun[39m",
+        "[34mavailable_capacity[39m" => "[32m5000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744017619[39;24m {#6602
+          [34mdate[39m: [36m2025-04-07 09:20:19.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744190419[39;24m {#6601
+          [34mdate[39m: [36m2025-04-09 09:20:19.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m45000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m7[39m,
+        "[34mstart_location[39m" => "[32mİstanbul[39m",
+        "[34mway_points[39m" => [
+          "[32mÇanakkale[39m",
+          "[32mBodrum[39m",
+        ],
+        "[34mend_location[39m" => "[32mİzmir[39m",
+        "[34mavailable_capacity[39m" => "[32m25000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744916158[39;24m {#6604
+          [34mdate[39m: [36m2025-04-17 18:55:58.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1745175358[39;24m {#6595
+          [34mdate[39m: [36m2025-04-20 18:55:58.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m150000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m8[39m,
+        "[34mstart_location[39m" => "[32mMersin[39m",
+        "[34mway_points[39m" => [
+          "[32mAlanya[39m",
+        ],
+        "[34mend_location[39m" => "[32mAntalya[39m",
+        "[34mavailable_capacity[39m" => "[32m15000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744743358[39;24m {#6594
+          [34mdate[39m: [36m2025-04-15 18:55:58.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744916158[39;24m {#6593
+          [34mdate[39m: [36m2025-04-17 18:55:58.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m75000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m9[39m,
+        "[34mstart_location[39m" => "[32mTrabzon[39m",
+        "[34mway_points[39m" => [
+          "[32mOrdu[39m",
+          "[32mGiresun[39m",
+        ],
+        "[34mend_location[39m" => "[32mSamsun[39m",
+        "[34mavailable_capacity[39m" => "[32m5000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744656958[39;24m {#6592
+          [34mdate[39m: [36m2025-04-14 18:55:58.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744829758[39;24m {#6591
+          [34mdate[39m: [36m2025-04-16 18:55:58.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m45000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m10[39m,
+        "[34mstart_location[39m" => "[32mMersin[39m",
+        "[34mway_points[39m" => [
+          "[32mAntalya[39m",
+          "[32mİzmir[39m",
+        ],
+        "[34mend_location[39m" => "[32mİstanbul[39m",
+        "[34mavailable_capacity[39m" => "[32m20000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744588800[39;24m {#6590
+          [34mdate[39m: [36m2025-04-14 00:00:00.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1745107200[39;24m {#6589
+          [34mdate[39m: [36m2025-04-20 00:00:00.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m100000.00[39m",
+      ],
+      [
+        "[34mid[39m" => [35m11[39m,
+        "[34mstart_location[39m" => "[32mAntalya[39m",
+        "[34mway_points[39m" => [
+          "[32mİzmir[39m",
+        ],
+        "[34mend_location[39m" => "[32mİstanbul[39m",
+        "[34mavailable_capacity[39m" => "[32m15000.00[39m",
+        "[34mdeparture_date[39m" => [34;4mIlluminate\Support\Carbon @1744657507[39;24m {#6588
+          [34mdate[39m: [36m2025-04-14 19:05:07.0 UTC (+00:00)[39m,
+        },
+        "[34marrival_date[39m" => [34;4mIlluminate\Support\Carbon @1744916707[39;24m {#6587
+          [34mdate[39m: [36m2025-04-17 19:05:07.0 UTC (+00:00)[39m,
+        },
+        "[34mprice[39m" => "[32m80000.00[39m",
+      ],
+    ],
+  }
+
