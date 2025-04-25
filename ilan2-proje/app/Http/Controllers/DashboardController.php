@@ -22,7 +22,7 @@ public function index()
 
     if ($user->user_type === 'gemici') {
         $rotalar = $user->gemiRoutes()->with('matchedYukler')->latest()->get();
-        return view('dashboard.gemisahibi', compact('user', 'rotalar'));
+        return view('dashboard.gemici', compact('user', 'rotalar'));
     }
 
     abort(403);

@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\MatchCargoAndShips::class,
+        Commands\ImportPortsCommand::class,
     ];
 
     /**
@@ -36,5 +37,6 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
+
     }
 } 

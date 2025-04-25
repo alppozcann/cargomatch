@@ -40,14 +40,11 @@
 
     <div class="row">
         <div class="col-md-12">
-<<<<<<< HEAD
-=======
             <div class="mb-4 text-end">
                 <a href="{{ route('yukler.create') }}" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-1"></i> Yük Ekle
                 </a>
             </div>
->>>>>>> 9523c88 (initial commit2)
             <h4 class="fw-semibold mb-3">Yük İlanların</h4>
             @forelse($yukler as $yuk)
                 <div class="card mb-3 shadow-sm border-0">

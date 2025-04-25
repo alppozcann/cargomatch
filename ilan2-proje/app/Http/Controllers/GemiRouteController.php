@@ -16,7 +16,7 @@ class GemiRouteController extends Controller
     {
         $user = auth()->user();
     
-        if ($user->isGemiSahibi()) {
+        if ($user->isGemici()) {
             $routes = $user->gemiRoutes()->with('matchedYukler')->latest()->get();
         } else {
             $routes = collect(); // Diğerleri göremez
@@ -34,8 +34,8 @@ class GemiRouteController extends Controller
             return redirect()->route('profile.edit')
                 ->with('error', 'Rota eklemek için gemici profilinizi tamamlamanız gerekiyor.');
         }
-
-        return view('gemi_routes.create');
+        $ports = \App\Models\Port::orderBy('name')->get();
+        return view('gemi_routes.create', compact('ports'));
     }
 
     /**
