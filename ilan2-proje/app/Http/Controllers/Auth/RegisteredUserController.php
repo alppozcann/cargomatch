@@ -31,20 +31,22 @@ class RegisteredUserController extends Controller
             'phone_number' => 'nullable|numeric',
             'company_name' => 'nullable|string|max:255',
             'company_address' => 'nullable|string|max:255',
+            'user_type' => 'required|in:yukveren,gemici',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_admin' => false, // Varsayılan olarak admin değil
+            'is_admin' => false,
             'phone_number' => $request->phone_number,
             'company_name' => $request->company_name,
             'company_address' => $request->company_address,
+            'user_type' => $request->user_type,
         ]);
 
         Auth::login($user);
 
-        return redirect(route('profile.edit'));
+        return redirect()->route('dashboard');
     }
 }

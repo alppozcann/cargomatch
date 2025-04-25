@@ -22,7 +22,7 @@
                     <div class="mb-3">
                         <label for="phone_number" class="form-label">Telefon Numarası</label>
                         <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" inputmode="numeric" pattern="[0-9]*" value="{{ old('phone_number') }}" required>
-                        @error('phone')
+                        @error('phone_number')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -48,7 +48,7 @@
                                 <div class="card mb-3">
                                     <div class="card-body">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="user_type" id="yukVerenType" value="yuk_veren" {{ old('user_type') === 'yuk_veren' ? 'checked' : '' }} required>
+                                            <input class="form-check-input" type="radio" name="user_type" id="yukVerenType" value="yukveren" {{ old('user_type') === 'yukveren' ? 'checked' : '' }} required>
                                             <label class="form-check-label" for="yukVerenType">
                                                 <h5>Yük Veren</h5>
                                                 <p class="text-muted">Yüküm var, taşınmasını istiyorum.</p>
@@ -68,7 +68,7 @@
                     <div class="mb-3">
                         <label for="company_name" class="form-label">Şirket İsmi</label>
                         <input type="text" class="form-control @error('company_name') is-invalid @enderror" id="company_name" name="company_name" value="{{ old('company_name') }}" required>
-                        @error('tc_no')
+                        @error('company_name')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -77,11 +77,12 @@
                     <div class="mb-3">
                         <label for="company_address" class="form-label">Şirket Adresi</label>
                         <input type="text" class="form-control @error('company_address') is-invalid @enderror" id="company_address" name="company_address" value="{{ old('company_address') }}" required>
-                        @error('tc_no')
+                        @error('company_address')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
+                    </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">E-posta Adresi</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>

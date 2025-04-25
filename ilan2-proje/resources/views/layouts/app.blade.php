@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deniz Taşımacılığı Matchleme</title>
+    <title>Cargomatch</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <style>
@@ -16,7 +16,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">Deniz Taşımacılığı</a>
+        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">CargoMatch</a>
 
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto d-flex align-items-center">
@@ -28,7 +28,7 @@
                         <li class="nav-item me-3">
                             <a class="nav-link" href="{{ route('yukler.create') }}">Yük Ekle</a>
                         </li>
-                    @elseif(auth()->user()->isGemiSahibi())
+                    @elseif(auth()->user()->isGemici())
                         <li class="nav-item me-3">
                             <a class="nav-link" href="{{ route('gemi_routes.index') }}">Rotalarım</a>
                         </li>
@@ -71,7 +71,7 @@
 
     <footer class="bg-light text-center py-3 mt-5">
         <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} Deniz Taşımacılığı Matchleme. Tüm hakları saklıdır.</p>
+            <p class="mb-0">&copy; {{ date('Y') }} CargoMatch. Tüm hakları saklıdır.</p>
         </div>
     </footer>
 

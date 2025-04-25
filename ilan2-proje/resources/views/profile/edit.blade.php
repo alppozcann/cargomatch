@@ -28,17 +28,25 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="description" class="form-label fw-semibold">Hakkınızda</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4">{{ old('description', $user->description) }}</textarea>
-                            @error('description')
+                            <label for="phone_number" class="form-label fw-semibold">Telefon Numaranız</label>
+                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}">
+                            @error('phone_number')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-4">
-                            <label for="phone" class="form-label fw-semibold">Telefon Numaranız</label>
-                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $user->phone) }}">
-                            @error('phone')
+                            <label for="company_name" class="form-label fw-semibold">Şirket İsmi</label>
+                            <input type="text" class="form-control @error('company_name') is-invalid @enderror" id="company_name" name="company_name" value="{{ old('company_name', $user->company_name) }}">
+                            @error('company_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="company_address" class="form-label fw-semibold">Şirket Adresi</label>
+                            <input type="text" class="form-control @error('company_address') is-invalid @enderror" id="company_address" name="company_address" value="{{ old('company_address', $user->company_address) }}">
+                            @error('company_address')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

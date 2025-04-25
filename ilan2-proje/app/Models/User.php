@@ -57,7 +57,7 @@ class User extends Authenticatable
 	}
     public function isYukVeren()
 	{
-		return $this->user_type === 'yuk_veren';
+		return $this->user_type === 'yukveren';
 	}
 
     public function gemiRoutes()
