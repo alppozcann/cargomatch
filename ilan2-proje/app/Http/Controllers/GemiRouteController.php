@@ -16,7 +16,7 @@ class GemiRouteController extends Controller
     {
         $user = auth()->user();
     
-        if ($user->isGemici()) {
+        if (auth()->check && $user->isGemici()) {
             $routes = $user->gemiRoutes()->with('matchedYukler')->latest()->get();
         } else {
             $routes = collect(); // Diğerleri göremez

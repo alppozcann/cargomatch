@@ -69,7 +69,7 @@
                                                     <td>{{ $yuk->from_location }}</td>
                                                     <td>{{ $yuk->to_location }}</td>
                                                     <td><strong>{{ number_format($yuk->proposed_price, 2) }} TL</strong></td>
-                                                    <td>{{ $yuk->desired_delivery_date->format('d.m.Y') }}</td>
+                                                    <td>{{ optional($yuk->desired_delivery_date)->format('d.m.Y') }}</td>
                                                     <td>
                                                         @if($yuk->match_status)
                                                             <span class="badge 
@@ -155,7 +155,7 @@
                                                     <td>{{ $yuk->from_location }}</td>
                                                     <td>{{ $yuk->to_location }}</td>
                                                     <td><strong>{{ number_format($yuk->proposed_price, 2) }} TL</strong></td>
-                                                    <td>{{ $yuk->desired_delivery_date->format('d.m.Y') }}</td>
+                                                    <td>{{ optional($yuk->desired_delivery_date)->format('d.m.Y') }}</td>
                                                     <td>
                                                         @if($yuk->match_status)
                                                             <span class="badge 
@@ -243,7 +243,7 @@
                                                     <td>{{ $yuk->from_location }}</td>
                                                     <td>{{ $yuk->to_location }}</td>
                                                     <td><strong>{{ number_format($yuk->proposed_price, 2) }} TL</strong></td>
-                                                    <td>{{ $yuk->desired_delivery_date->format('d.m.Y') }}</td>
+                                                    <td>{{ optional($yuk->desired_delivery_date)->format('d.m.Y') }}</td>
                                                     <td>
                                                         @if($yuk->match_status)
                                                             <span class="badge 

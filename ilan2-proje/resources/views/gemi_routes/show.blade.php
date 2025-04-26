@@ -22,12 +22,12 @@
                         @endif
                         <p class="mb-1">
                             <strong>Hareket:</strong> 
-                            {{ $gemiRoute->departure_date->format('d.m.Y H:i') }}
-                        </p>
+                            {{ optional($gemiRoute->departure_date)->format('d.m.Y') }}
+                            </p>
                         <p class="mb-1">
                             <strong>Varış:</strong> 
-                            {{ $gemiRoute->arrival_date->format('d.m.Y H:i') }}
-                        </p>
+                            {{ optional($gemiRoute->arrival_date)->format('d.m.Y') }}
+                            </p>
                     </div>
                     <div class="col-md-6">
                         <h5>Kapasite ve Fiyat</h5>

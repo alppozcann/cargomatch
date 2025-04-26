@@ -68,7 +68,7 @@
                                                     <td>{{ $route->from_location }}</td>
                                                     <td>{{ $route->to_location }}</td>
                                                     <td><strong>{{ number_format($route->proposed_price, 2) }} TL</strong></td>
-                                                    <td>{{ $route->departure_date->format('d.m.Y') }}</td>
+                                                    <td>{{ optional($route->departure_date)->format('d.m.Y') }}</td>
                                                     <td>
                                                         <div class="d-flex justify-content-end">
                                                             <a href="{{ route('gemi-routes.show', $route) }}" class="btn btn-sm btn-outline-info me-2">
@@ -123,7 +123,7 @@
                                                     <td>{{ $route->from_location }}</td>
                                                     <td>{{ $route->to_location }}</td>
                                                     <td><strong>{{ number_format($route->proposed_price, 2) }} TL</strong></td>
-                                                    <td>{{ $route->departure_date->format('d.m.Y') }}</td>
+                                                    <td>{{ optional($route->departure_date)->format('d.m.Y') }}</td>
                                                     <td>
                                                         <div class="d-flex justify-content-end">
                                                             <a href="{{ route('gemi-routes.show', $route) }}" class="btn btn-sm btn-outline-info me-2">
@@ -180,7 +180,7 @@
                                                     <td>{{ $route->from_location }}</td>
                                                     <td>{{ $route->to_location }}</td>
                                                     <td><strong>{{ number_format($route->proposed_price, 2) }} TL</strong></td>
-                                                    <td>{{ $route->departure_date->format('d.m.Y') }}</td>
+                                                    <td>{{ optional($route->departure_date)->format('d.m.Y') }}</td>
                                                     <td>
                                                         <div class="d-flex justify-content-end">
                                                             <a href="{{ route('gemi-routes.show', $route) }}" class="btn btn-sm btn-outline-info">

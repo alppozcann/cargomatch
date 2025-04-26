@@ -88,7 +88,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 });
 
 // Admin routes
-Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/cargo', [AdminController::class, 'cargo'])->name('admin.cargo');

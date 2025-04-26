@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-calendar-event text-primary me-2"></i>
-                                    <span class="fw-medium">{{ $yuk->desired_delivery_date->format('d.m.Y') }}</span>
+                                    <span class="fw-medium">{{ optional($yuk->desired_delivery_date)->format('d.m.Y') }}</span>
                                 </div>
                             </div>
                             @if($yuk->description)

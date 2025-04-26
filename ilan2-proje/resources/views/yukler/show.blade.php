@@ -63,7 +63,7 @@
                     </div>
                     <div class="mb-3">
                         <h6 class="text-muted mb-2">İstenen Teslimat Tarihi</h6>
-                        <p class="mb-0">{{ $yuk->desired_delivery_date->format('d.m.Y') }}</p>
+                        <p class="mb-0">{{ optional($yuk->desired_delivery_date)->format('d.m.Y') }}</p>
                     </div>
                     <div class="mb-3">
                         <h6 class="text-muted mb-2">Durum</h6>
@@ -177,8 +177,8 @@
                                             <td>{{ number_format($route->available_capacity, 2) }} kg</td>
                                             <td>{{ number_format($route->price, 2) }} TL</td>
                                             <td>
-                                                <div>Kalkış: {{ $route->departure_date->format('d.m.Y') }}</div>
-                                                <div>Varış: {{ $route->arrival_date->format('d.m.Y') }}</div>
+                                                <div>Kalkış: {{ optional($route->departure_date)->format('d.m.Y') }}</div>
+                                                <div>Varış: {{ optional($route->arrival_date)->format('d.m.Y') }}</div>
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
@@ -246,8 +246,8 @@
                         
                         <h6 class="text-muted mb-2">Tarih</h6>
                         <p class="mb-3">
-                            Kalkış: {{ $yuk->matchedGemiRoute->departure_date->format('d.m.Y') }}<br>
-                            Varış: {{ $yuk->matchedGemiRoute->arrival_date->format('d.m.Y') }}
+                            Kalkış: {{ optional($yuk->matchedGemiRoute->departure_date)->format('d.m.Y') }}<br>
+                            Varış: {{ optional($yuk->matchedGemiRoute->arrival_date)->format('d.m.Y') }}
                         </p>
                         
                         <h6 class="text-muted mb-2">Gemi Sahibi</h6>

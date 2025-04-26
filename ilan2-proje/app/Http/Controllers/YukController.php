@@ -18,7 +18,7 @@ class YukController extends Controller
         $user = auth()->user();
     
         // Sadece kendi yüklerini görebilsin
-        if ($user->isYukVeren()) {
+        if (auth()->check && $user->isYukVeren()) {
             $yukler = $user->yukler()->with('user')->latest()->get();
         } else {
             // Gemi sahibi veya admin için görünmeyecek (gerekirse boş bırak)

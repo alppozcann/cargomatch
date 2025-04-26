@@ -12,7 +12,7 @@
             @endauth
         </div>
         
-        @if($routes->count() > 0)
+        @if(isset($routes) && $routes->count() > 0)
             <div class="row">
                 @foreach($routes as $gemiRoute)
                     <div class="col-md-6 mb-4">
@@ -27,8 +27,8 @@
                                     <p class="mb-1"><strong>Boş Kapasite:</strong> {{ number_format($gemiRoute->available_capacity, 2) }} kg</p>
                                     <p class="mb-0">
                                         <strong>Tarih:</strong> 
-                                        {{ $gemiRoute->departure_date->format('d.m.Y') }} - 
-                                        {{ $gemiRoute->arrival_date->format('d.m.Y') }}
+                                        {{ optional($gemiRoute->departure_date)->format('d.m.Y') }}
+                                        {{ optional($gemiRoute->arrival_date)->format('d.m.Y') }}
                                     </p>
                                 </div>
                                 <p class="card-text">{{ \Illuminate\Support\Str::limit($gemiRoute->description, 100) }}</p>
