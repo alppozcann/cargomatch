@@ -129,30 +129,28 @@ class GemiRouteController extends Controller
      */
     public function edit(GemiRoute $gemiRoute)
     {
-        // Sadece ilan sahibi düzenleyebilir
         if (Auth::id() !== $gemiRoute->user_id) {
             return redirect()->route('gemi_routes.index')
                 ->with('error', 'Bu rotayı düzenleme yetkiniz yok.');
         }
-
-        return view('gemi_routes.edit', compact('gemiRoute'));
+    
+        $ports = \App\Models\Port::orderBy('name')->get(); // Limanları al
+        return view('gemi_routes.edit', compact('gemiRoute', 'ports')); // Dikkat burada ports da var
     }
+    
 
     /**
      * Gemi rotasını günceller.
      */
     public function update(Request $request, GemiRoute $gemiRoute)
     {
-        // Sadece ilan sahibi güncelleyebilir
         if (Auth::id() !== $gemiRoute->user_id) {
             return redirect()->route('gemi_routes.index')
                 ->with('error', 'Bu rotayı güncelleme yetkiniz yok.');
         }
-
+    
         $request->validate([
             'title' => 'required|string|max:255',
-            'start_location' => 'required|string|max:255',
-            'end_location' => 'required|string|max:255',
             'way_points' => 'nullable|array',
             'way_points.*' => 'nullable|string|max:255',
             'available_capacity' => 'required|numeric|min:0',
@@ -163,26 +161,25 @@ class GemiRouteController extends Controller
             'weight_type' => 'required|string|max:10',
             'currency_type' => 'required|string|max:10',
         ]);
-
-        // Way points array'ini temizle (boş olanları kaldır)
+    
         $wayPoints = array_filter($request->way_points ?? []);
-
+    
         $gemiRoute->update([
             'title' => $request->title,
-            'start_location' => $request->start_location,
-            'end_location' => $request->end_location,
             'way_points' => $wayPoints,
             'available_capacity' => $request->available_capacity,
             'price' => $request->price,
             'departure_date' => $request->departure_date,
             'arrival_date' => $request->arrival_date,
             'description' => $request->description,
+            'weight_type' => $request->weight_type,
+            'currency_type' => $request->currency_type,
         ]);
-
+    
         return redirect()->route('gemi_routes.show', $gemiRoute)
             ->with('success', 'Gemi rotası başarıyla güncellendi.');
     }
-
+    
     /**
      * Gemi rotasını siler.
      */
