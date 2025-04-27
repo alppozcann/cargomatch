@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-5">
                             <label for="departure_port" class="form-label">Başlangıç Limanı</label>
-                            <select class="form-control select2" id="departure_port" name="departure_port_id" required>
+                            <select class="form-control select2" id="departure_port" name="start_location" required>
                                 <option value="">Bir liman seçin</option>
                                 @foreach($ports as $port)
                                     <option value="{{ $port->id }}">{{ $port->name }}</option>
@@ -32,7 +32,7 @@
 
                         <div class="col-md-6 mb-5">
                             <label for="arrival_port" class="form-label">Varış Limanı</label>
-                            <select class="form-control select2" id="arrival_port" name="arrival_port_id" required>
+                            <select class="form-control select2" id="arrival_port" name="end_location" required>
                                 <option value="">Bir liman seçin</option>
                                 @foreach($ports as $port)
                                     <option value="{{ $port->id }}">{{ $port->name }}</option>
@@ -44,7 +44,7 @@
                     <div class="mb-3">
                         <label for="waypoint_port" class="form-label">Ara Duraklar</label>
                         <div class="input-group mb-2 align-items-center">
-                            <select class="form-control select2" id="waypoint_port" name="waypoint_port_id" style="width: 90%;">
+                            <select class="form-control select2" id="waypoint_port" name="way_points[]" style="width: 90%;">
                                 <option value="">Ara durak limanı seçin</option>
                                 @foreach($ports as $port)
                                     <option value="{{ $port->id }}">{{ $port->name }}</option>
@@ -60,7 +60,7 @@
                             <label for="available_capacity" class="form-label">Boş Kapasite</label>
                             <div class="input-group">
                                 <input type="number" step="0.01" min="0" class="form-control" id="available_capacity" name="available_capacity" value="{{ old('available_capacity') }}" required>
-                                <select class="form-select" id="capacity_unit" name="capacity_unit" style="max-width: 100px;">
+                                <select class="form-select" id="weight_type" name="weight_type" style="max-width: 100px;">
                                     <option value="kg" selected>kg</option>
                                     <option value="ton">ton</option>
                                 </select>
@@ -70,7 +70,7 @@
                             <label for="price" class="form-label">Fiyat</label>
                             <div class="input-group">
                                 <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="{{ old('price') }}" required>
-                                <select class="form-select" id="currency" name="currency" style="max-width: 100px;">
+                                <select class="form-select" id="currency_type" name="currency_type" style="max-width: 100px;">
                                     <option value="TRY" selected>₺</option>
                                     <option value="USD">$</option>
                                     <option value="EUR">€</option>

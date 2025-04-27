@@ -19,12 +19,12 @@
                         <div class="card h-100">
                             <div class="card-header d-flex justify-content-between">
                                 <h5 class="card-title mb-0">{{ $gemiRoute->title }}</h5>
-                                <span class="badge bg-primary">{{ number_format($gemiRoute->price, 2) }} TL</span>
+                                <span class="badge bg-primary">{{ number_format($gemiRoute->price, 2)}} {{ $gemiRoute->currency_type }} </span>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <p class="mb-1"><strong>Rota:</strong> {{ $gemiRoute->start_location }} → {{ $gemiRoute->end_location }}</p>
-                                    <p class="mb-1"><strong>Boş Kapasite:</strong> {{ number_format($gemiRoute->available_capacity, 2) }} kg</p>
+                                    <p class="mb-1"><strong>Rota:</strong> {{ $gemiRoute->start_port_name }} → {{ $gemiRoute->end_port_name }}</p>
+                                    <p class="mb-1"><strong>Boş Kapasite:</strong> {{ number_format($gemiRoute->available_capacity, 2) }} {{ $gemiRoute->weight_type }}</p>
                                     <p class="mb-0">
                                         <strong>Tarih:</strong> 
                                         {{ optional($gemiRoute->departure_date)->format('d.m.Y') }}

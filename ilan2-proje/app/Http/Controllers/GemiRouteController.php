@@ -16,10 +16,15 @@ class GemiRouteController extends Controller
     {
         $user = auth()->user();
     
-        if (auth()->check && $user->isGemici()) {
+        if ($user->isGemici()) {
             $routes = $user->gemiRoutes()->with('matchedYukler')->latest()->get();
+    
+            foreach ($routes as $route) {
+                $route->start_port_name = \App\Models\Port::find($route->start_location)?->name ?? 'Bilinmiyor';
+                $route->end_port_name = \App\Models\Port::find($route->end_location)?->name ?? 'Bilinmiyor';
+            }
         } else {
-            $routes = collect(); // Diğerleri göremez
+            $routes = collect(); // Diğer kullanıcılar rota göremez
         }
     
         return view('gemi_routes.index', compact('routes'));
@@ -60,6 +65,8 @@ class GemiRouteController extends Controller
             'departure_date' => 'required|date',
             'arrival_date' => 'required|date|after:departure_date',
             'description' => 'nullable|string',
+            'weight_type' => 'required|string|max:10',
+            'currency_type' => 'required|string|max:10',
         ]);
 
         // Way points array'ini temizle (boş olanları kaldır)
@@ -76,6 +83,8 @@ class GemiRouteController extends Controller
             'departure_date' => $request->departure_date,
             'arrival_date' => $request->arrival_date,
             'description' => $request->description,
+            'weight_type' => $request->weight_type,
+            'currency_type' => $request->currency_type,
             'status' => 'active',
         ]);
 
@@ -91,13 +100,29 @@ class GemiRouteController extends Controller
         if (auth()->id() !== $gemiRoute->user_id) {
             abort(403); // Yetkisiz erişim
         }
-
+    
         // ShipCargoMatchingService'i kullanarak eşleşebilecek yükleri bul
         $matchingService = new \App\Services\ShipCargoMatchingService();
         $matchingYukler = $matchingService->findMatchingCargoForShip($gemiRoute);
-        
-        return view('gemi_routes.show', compact('gemiRoute', 'matchingYukler'));
+    
+        // Başlangıç ve varış limanlarını isim olarak al
+        $startPort = \App\Models\Port::find($gemiRoute->start_location);
+        $endPort = \App\Models\Port::find($gemiRoute->end_location);
+    
+        // Ara durakları isim olarak al
+        $waypoints = [];
+        if (is_array($gemiRoute->way_points)) {
+            foreach ($gemiRoute->way_points as $waypointId) {
+                $port = \App\Models\Port::find($waypointId);
+                if ($port) {
+                    $waypoints[] = $port->name;
+                }
+            }
+        }
+    
+        return view('gemi_routes.show', compact('gemiRoute', 'matchingYukler', 'startPort', 'endPort', 'waypoints'));
     }
+    
 
     /**
      * Gemi rotasını düzenleme formunu gösterir.

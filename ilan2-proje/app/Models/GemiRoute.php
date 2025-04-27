@@ -21,6 +21,8 @@ class GemiRoute extends Model
 	'arrival_date',
 	'description',
 	'status',
+	'weight_type',
+	'currency_type',
 	];
 
 	protected $casts = [

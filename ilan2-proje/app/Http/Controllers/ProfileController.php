@@ -39,7 +39,7 @@ class ProfileController extends Controller
             'company_address' => $request->company_address,
         ]);
         
-        return redirect()->route('profile.edit')
+        return redirect()->route('dashboard')
             ->with('success', 'Profil bilgileriniz başarıyla güncellendi.');
     }
 

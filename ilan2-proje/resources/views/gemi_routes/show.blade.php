@@ -6,33 +6,33 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">{{ $gemiRoute->title }}</h4>
-                <span class="badge bg-primary fs-5">{{ number_format($gemiRoute->price, 2) }} TL</span>
+                <span class="badge bg-primary fs-5">{{ number_format($gemiRoute->price, 2) }} {{$gemiRoute->currency_type}}</span>
             </div>
             <div class="card-body">
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <h5>Rota Bilgileri</h5>
-                        <p class="mb-1"><strong>Başlangıç:</strong> {{ $gemiRoute->start_location }}</p>
-                        <p class="mb-1"><strong>Bitiş:</strong> {{ $gemiRoute->end_location }}</p>
+                        <p class="mb-1"><strong>Başlangıç:</strong> {{ $startPort->name ?? 'Bilinmiyor' }}</p>
+                        <p class="mb-1"><strong>Bitiş:</strong> {{ $endPort->name ?? 'Bilinmiyor' }}</p>
                         @if(count($gemiRoute->way_points) > 0)
                             <p class="mb-1">
                                 <strong>Ara Duraklar:</strong>
-                                {{ implode(' → ', $gemiRoute->way_points) }}
+                                {{ implode(' → ', $waypoints) }}
                             </p>
                         @endif
                         <p class="mb-1">
-                            <strong>Hareket:</strong> 
+                            <strong>Hareket Tarihi:</strong> 
                             {{ optional($gemiRoute->departure_date)->format('d.m.Y') }}
                             </p>
                         <p class="mb-1">
-                            <strong>Varış:</strong> 
+                            <strong>Varış Tarihi:</strong> 
                             {{ optional($gemiRoute->arrival_date)->format('d.m.Y') }}
                             </p>
                     </div>
                     <div class="col-md-6">
                         <h5>Kapasite ve Fiyat</h5>
-                        <p class="mb-1"><strong>Boş Kapasite:</strong> {{ number_format($gemiRoute->available_capacity, 2) }} kg</p>
-                        <p class="mb-1"><strong>Fiyat:</strong> {{ number_format($gemiRoute->price, 2) }} TL</p>
+                        <p class="mb-1"><strong>Boş Kapasite:</strong> {{ number_format($gemiRoute->available_capacity, 2) }} {{$gemiRoute->weight_type}}</p>
+                        <p class="mb-1"><strong>Fiyat:</strong> {{ number_format($gemiRoute->price, 2) }} {{$gemiRoute->currency_type}}</p>
                         <p class="mb-1">
                             <strong>Durum:</strong>
                             @if($gemiRoute->status === 'active')

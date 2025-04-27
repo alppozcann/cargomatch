@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container py-5">
     <div class="row mb-4">
@@ -26,6 +25,17 @@
             </div>
         </div>
     </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow border-0">
+            <div class="card-body">
+            <h5 class="card-title fw-semibold mb-3 d-flex align-items-center">
+                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 24px;"></i> 
+                <span>Eşleşen Yük Sayısı</span>
+            </h5>
+            <h3 class="fw-bold">{{ $matchedYukCount }}</h3>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{-- Rotalar Listesi --}}
@@ -41,10 +51,10 @@
             <div class="card mb-3 shadow-sm border-0">
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="fw-bold mb-1">{{ $rota->baslangic_liman }} → {{ $rota->bitis_liman }}</h5>
+                        <h5 class="fw-bold mb-1">{{ $rota->start_port_name }} → {{ $rota->end_port_name }}</h5>
                         <p class="text-muted mb-0">
-                            Kapasite: {{ $rota->kapasite }} ton |
-                            Tahmini Süre: {{ $rota->tahmini_sure }} gün |
+                            Kapasite: {{ $rota->available_capacity }} {{$rota->weight_type}} |
+                            Kalkış Zamanı: {{ $rota->departure_date }} |
                             Durum: 
                             @if($rota->durum == 'tamamlandı')
                                 <span class="badge bg-success">Tamamlandı</span>
