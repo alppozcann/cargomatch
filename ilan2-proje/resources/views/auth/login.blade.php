@@ -6,9 +6,9 @@
         <div class="card">
             <div class="card-header">Giriş Yap</div>
             <div class="card-body">
-            @if (session('error'))
+            @if ($errors->any())
                 <div class="alert alert-danger">
-                    {{ session('error') }}
+                    {{ $errors->first() }}
                 </div>
             @endif
                 <form method="POST" action="{{ route('login.submit') }}">
