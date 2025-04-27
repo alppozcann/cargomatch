@@ -34,8 +34,8 @@ class AuthenticatedSessionController extends Controller
             'password' => 'required',
         ]);
 
-        dd(Auth::attempt($credentials));
-
+        //dd(Auth::attempt($credentials));
+        // Kullanıcıyı doğrula
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
