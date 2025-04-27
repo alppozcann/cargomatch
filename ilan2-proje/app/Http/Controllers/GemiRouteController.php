@@ -160,6 +160,8 @@ class GemiRouteController extends Controller
             'departure_date' => 'required|date',
             'arrival_date' => 'required|date|after:departure_date',
             'description' => 'nullable|string',
+            'weight_type' => 'required|string|max:10',
+            'currency_type' => 'required|string|max:10',
         ]);
 
         // Way points array'ini temizle (boş olanları kaldır)
