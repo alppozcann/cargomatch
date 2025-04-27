@@ -265,7 +265,7 @@
         <div class="container">
             <a class="navbar-brand" href="#home">
                 <img src="{{ asset('img/logo.png') }}" alt="Logo" height="30" class="d-inline-block align-text-top me-2">
-                Deniz Taşımacılığı
+                CargoOptima
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
