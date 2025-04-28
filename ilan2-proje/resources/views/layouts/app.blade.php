@@ -25,8 +25,8 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">CargoOptima</a>
-
+        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">
+            <img src="{{ asset('logo.png') }}" alt="Logo" style="height: 40px; margin-right: 10px;">CargoOptima</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto d-flex align-items-center">
                 @auth
