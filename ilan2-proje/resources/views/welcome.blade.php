@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deniz Taşımacılığı Platformu</title>
+    <title>CargoOptima</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <style>
@@ -263,8 +263,8 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="#home">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo" height="30" class="d-inline-block align-text-top me-2">
+            <a class="navbar-brand fw-bold d-flex align-items-center overflow-hidden" href="#home">
+                <img src="{{ asset('logo2.png') }}" alt="Logo" height="80" class="d-inline-block align-text-top me-2">
                 CargoOptima
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
@@ -594,7 +594,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-5 mb-lg-0">
-                    <h4 class="footer-title">Deniz Taşımacılığı</h4>
+                    <h4 class="footer-title">CargoOptima</h4>
                     <p>Küçük ve orta büyüklükteki gemilerde kargo taşımacılığı için eşleştirme platformu.</p>
                     <div class="social-links mt-4">
                         <a href="#"><i class="bi bi-facebook"></i></a>
@@ -646,7 +646,7 @@
             <hr class="my-5 border-light">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-md-0">&copy; {{ date('Y') }} Deniz Taşımacılığı. Tüm hakları saklıdır.</p>
+                    <p class="mb-md-0">&copy; {{ date('Y') }} CargoOptima. Tüm hakları saklıdır.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <p class="mb-0">
@@ -748,5 +748,18 @@
             });
         });
     </script>
+<style>
+.hero-section {
+    background: url('{{ asset('startpage.jpg') }}') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    padding: 120px 0; /* İçerikleri biraz aşağı çeker */
+    color: white; /* Yazılar beyaz olsun */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Yazılara hafif gölge verir okunurluğu artırır */
+}
+</style>
 </body>
+
+
 </html>

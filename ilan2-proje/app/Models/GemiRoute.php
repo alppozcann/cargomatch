@@ -23,6 +23,7 @@ class GemiRoute extends Model
 	'status',
 	'weight_type',
 	'currency_type',
+	'ship_id',
 	];
 
 	protected $casts = [
@@ -39,5 +40,10 @@ class GemiRoute extends Model
 	{
 		return $this->hasMany(Yuk::class, 'matched_gemi_route_id');
 	}
+	public function ship()
+	{
+    	return $this->belongsTo(Ship::class, 'ship_id');
+	}
+
 }
 

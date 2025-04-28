@@ -12,6 +12,13 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <h5>Rota Bilgileri</h5>
+                        <p class="mb-1"><strong>Gemi Adı:</strong> 
+                                        @if($gemiRoute->ship)
+                                            {{ $gemiRoute->ship->ship_name }}
+                                        @else
+                                            <span class="text-muted">Belirtilmemiş</span>
+                                        @endif
+                                    </p>
                         <p class="mb-1"><strong>Başlangıç:</strong> {{ $startPort->name ?? 'Bilinmiyor' }}</p>
                         <p class="mb-1"><strong>Bitiş:</strong> {{ $endPort->name ?? 'Bilinmiyor' }}</p>
                         @if(count($gemiRoute->way_points) > 0)

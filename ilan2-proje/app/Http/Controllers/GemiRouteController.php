@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\GemiRoute;
+use App\Models\Ship;
 use App\Models\Yuk;
+use App\Models\Port;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,21 +16,23 @@ class GemiRouteController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-    
-        if ($user->isGemici()) {
-            $routes = $user->gemiRoutes()->with('matchedYukler')->latest()->get();
-    
-            foreach ($routes as $route) {
-                $route->start_port_name = \App\Models\Port::find($route->start_location)?->name ?? 'Bilinmiyor';
-                $route->end_port_name = \App\Models\Port::find($route->end_location)?->name ?? 'Bilinmiyor';
+            $user = auth()->user();
+            
+            if ($user->isGemici()) {
+                $routes = $user->gemiRoutes()->with(['matchedYukler', 'ship'])->latest()->get();
+                
+                foreach ($routes as $route) {
+                    $route->start_port_name = Port::find($route->start_location)?->name ?? 'Bilinmiyor';
+                    $route->end_port_name = Port::find($route->end_location)?->name ?? 'Bilinmiyor';
+                }
+            } else {
+                $routes = collect();
             }
-        } else {
-            $routes = collect(); // Diğer kullanıcılar rota göremez
-        }
-    
-        return view('gemi_routes.index', compact('routes'));
+            
+            return view('gemi_routes.index', compact('routes'));
+
     }
+
     /**
      * Yeni bir gemi rotası eklemek için form gösterir.
      */
@@ -40,7 +44,8 @@ class GemiRouteController extends Controller
                 ->with('error', 'Rota eklemek için gemici profilinizi tamamlamanız gerekiyor.');
         }
         $ports = \App\Models\Port::orderBy('name')->get();
-        return view('gemi_routes.create', compact('ports'));
+        $ships = Ship::where('user_id', Auth::id())->get();
+        return view('gemi_routes.create', compact('ports', 'ships'));
     }
 
     /**
@@ -53,6 +58,19 @@ class GemiRouteController extends Controller
             return redirect()->route('gemi_routes.index')
                 ->with('error', 'Rota eklemek için gemici profilinizi tamamlamanız gerekiyor.');
         }
+        $shipId = $request->ship_id; // Kullanıcı formdan seçtiyse
+
+        $existingRoute = GemiRoute::where('ship_id', $shipId)
+        ->where(function ($query) use ($request) {
+        $query->whereBetween('departure_date', [$request->departure_date, $request->arrival_date])
+              ->orWhereBetween('arrival_date', [$request->departure_date, $request->arrival_date]);
+    })
+    ->first();
+
+if ($existingRoute) {
+    return back()->with('error', 'Bu gemi için belirtilen tarihler arasında zaten bir rota mevcut.');
+}
+
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -74,6 +92,7 @@ class GemiRouteController extends Controller
 
         $gemiRoute = GemiRoute::create([
             'user_id' => Auth::id(),
+            'ship_id' => $request->ship_id,
             'title' => $request->title,
             'start_location' => $request->start_location,
             'end_location' => $request->end_location,
@@ -119,8 +138,23 @@ class GemiRouteController extends Controller
                 }
             }
         }
+        
+        // Gemi bilgilerini al
+        $ship = null;
+        $shipId = $gemiRoute->ship_id;
+        if ($shipId) {
+            $ship = Ship::find($shipId);
+        }
     
-        return view('gemi_routes.show', compact('gemiRoute', 'matchingYukler', 'startPort', 'endPort', 'waypoints'));
+        return view('gemi_routes.show', compact(
+            'gemiRoute', 
+            'matchingYukler', 
+            'startPort', 
+            'endPort', 
+            'waypoints',
+            'ship',
+            'shipId'
+        ));
     }
     
 

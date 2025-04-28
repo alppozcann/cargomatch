@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GemiRouteController;
+use App\Http\Controllers\ShipController;
 use App\Http\Controllers\YukController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
@@ -82,8 +83,13 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
     Route::post('/yukler/{yuk}/cancel-match', [YukController::class, 'cancelMatch'])->name('yukler.cancel_match');
     Route::post('/yukler/{yuk}/complete-delivery', [YukController::class, 'completeDelivery'])->name('yukler.complete_delivery');
 
-    // Harita
-    Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
+    // Gemi ekleme
+    Route::get('/ships', [ShipController::class, 'index'])->name('ships.index');
+    Route::get('/ships/create', [ShipController::class, 'create'])->name('ships.create');
+    Route::post('/ships', [ShipController::class, 'store'])->name('ships.store');
+    Route::get('/ships/{ship}/edit', [ShipController::class, 'edit'])->name('ships.edit');
+    Route::put('/ships/{ship}', [ShipController::class, 'update'])->name('ships.update');
+    Route::delete('/ships/{ship}', [ShipController::class, 'destroy'])->name('ships.destroy');
 
 });
 

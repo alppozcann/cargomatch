@@ -25,8 +25,11 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ route('dashboard') }}">
-            <img src="{{ asset('logo.png') }}" alt="Logo" style="height: 40px; margin-right: 10px;">CargoOptima</a>
+    <a class="navbar-brand fw-bold d-flex align-items-center overflow-hidden" href="{{ route('dashboard') }}" style="height: 50px;">
+    <img src="{{ asset('logo2.png') }}" alt="Logo" style="height: 80px; width: auto; object-fit: cover; margin-right: 10px;">
+    CargoOptima
+</a>
+
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto d-flex align-items-center">
                 @auth
@@ -38,6 +41,8 @@
                             <a class="nav-link" href="{{ route('yukler.create') }}">Yük Ekle</a>
                         </li>
                     @elseif(auth()->user()->isGemici())
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="{{ route('ships.index') }}">Gemilerim</a>
                         <li class="nav-item me-3">
                             <a class="nav-link" href="{{ route('gemi_routes.index') }}">Rotalarım</a>
                         </li>
@@ -80,7 +85,7 @@
 
     <footer class="bg-light text-center py-3 mt-5">
         <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} CargoMatch. Tüm hakları saklıdır.</p>
+            <p class="mb-0">&copy; {{ date('Y') }} CargoOptima. Tüm hakları saklıdır.</p>
         </div>
     </footer>
 

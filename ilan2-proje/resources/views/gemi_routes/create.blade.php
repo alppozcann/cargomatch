@@ -18,7 +18,16 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+                    <div class="mb-3">
+                        <label for="ship_id" class="form-label">Gemi Seçin</label>
+                        <select name="ship_id" id="ship_id" class="form-select" required>
+                            <option value="">Gemi seçin...</option>
+                            @foreach($ships as $ship)
+                                <option value="{{ $ship->id }}">{{ $ship->ship_name }} ({{ $ship->plate_code }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-5">
                             <label for="departure_port" class="form-label">Başlangıç Limanı</label>
