@@ -14,27 +14,45 @@
     </div>
 
     {{-- Rota İstatistikleri --}}
-<div class="row">
-    <div class="col-md-6 mb-4">
-        <div class="card shadow border-0">
-            <div class="card-body">
-                <h5 class="card-title fw-semibold mb-3">
-                    <i class="bi bi-geo-alt-fill me-2 text-primary"></i> Toplam Rota
-                </h5>
-                <h3 class="fw-bold">{{ $rotalar->count() }}</h3>
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+<div class="col">
+        <a href="{{ route('gemi_routes.index') }}" class="text-decoration-none text-dark">
+            <div class="card shadow border-0 h-100 hover-grow">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold mb-3 d-flex align-items-center">
+                        <i class="bi bi-signpost-split-fill text-primary me-2" style="font-size: 24px;"></i>
+                        <span>Toplam Rota</span>
+                    </h5>
+                    <h3 class="fw-bold">{{ $rotalar->count() }}</h3>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
-    <div class="col-md-6 mb-4">
-        <div class="card shadow border-0">
-            <div class="card-body">
-            <h5 class="card-title fw-semibold mb-3 d-flex align-items-center">
-                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 24px;"></i> 
-                <span>Eşleşen Yük Sayısı</span>
-            </h5>
-            <h3 class="fw-bold">{{ $matchedYukCount }}</h3>
+    <div class="col">
+        <a href="{{ route('matched.products') }}" class="text-decoration-none text-dark">
+            <div class="card shadow border-0 h-100 hover-grow">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold mb-3 d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 24px;"></i> 
+                        <span>Eşleşen Yük Sayısı</span>
+                    </h5>
+                    <h3 class="fw-bold">{{ $matchedYukCount }}</h3>
+                </div>
             </div>
-        </div>
+        </a>
+    </div>
+    <div class="col">
+        <a href="{{ route('ships.index') }}" class="text-decoration-none text-dark">
+            <div class="card shadow border-0 h-100 hover-grow">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold mb-3 d-flex align-items-center">
+                        <i class="fa-solid fa-ship text-primary me-2" style="font-size: 24px;"></i> 
+                        <span>Gemilerim</span>
+                    </h5>
+                    <h3 class="fw-bold">{{ $gemiCount }}</h3>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
 
@@ -78,4 +96,12 @@
     </div>
 </div>
 </div>
+<style>
+    .hover-grow {
+        transition: transform 0.3s ease-in-out;
+    }
+    .hover-grow:hover {
+        transform: scale(1.03);
+    }
+</style>
 @endsection

@@ -70,6 +70,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
     Route::put('/gemi-routes/{gemiRoute}', [GemiRouteController::class, 'update'])->name('gemi_routes.update');
     Route::delete('/gemi-routes/{gemiRoute}', [GemiRouteController::class, 'destroy'])->name('gemi_routes.destroy');
     Route::post('/gemi-routes/{gemiRoute}/match/{yuk}', [GemiRouteController::class, 'matchYuk'])->name('gemi_routes.match_yuk');
+
+    // Eşleşme onaylama ve reddetme
+    Route::post('/matched-cargos/{yuk}/approve', [GemiRouteController::class, 'approveMatch'])->name('matched-cargos.approve');
+    Route::post('/matched-cargos/{yuk}/reject', [GemiRouteController::class, 'rejectMatch'])->name('matched-cargos.reject');
     
     // Yükler
     Route::get('/yukler', [YukController::class, 'index'])->name('yukler.index');
@@ -91,6 +95,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
     Route::put('/ships/{ship}', [ShipController::class, 'update'])->name('ships.update');
     Route::delete('/ships/{ship}', [ShipController::class, 'destroy'])->name('ships.destroy');
 
+    // Eşleşmiş yükleri görüntüleme
+    Route::get('/matched-products', [\App\Http\Controllers\DashboardController::class, 'matchedProducts'])->name('matched.products');
 });
 
 // Admin routes

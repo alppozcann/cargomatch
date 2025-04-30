@@ -56,4 +56,13 @@ class Yuk extends Model
     {
         return $this->belongsTo(GemiRoute::class, 'matched_gemi_route_id');
     }
+    public function fromPort()
+    {
+        return $this->belongsTo(Port::class, 'from_location');
+    }
+
+    public function toPort()
+    {
+        return $this->belongsTo(Port::class, 'to_location');
+    }
 }

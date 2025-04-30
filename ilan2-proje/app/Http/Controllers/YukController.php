@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Yuk;
+use App\Models\Port;
+use App\Models\Ship;
 use App\Models\GemiRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +20,13 @@ class YukController extends Controller
         $user = auth()->user();
     
         // Sadece kendi yüklerini görebilsin
-        if (auth()->check && $user->isYukVeren()) {
+        if ($user->isYukVeren()) {
             $yukler = $user->yukler()->with('user')->latest()->get();
+            foreach ($yukler as $yuk) {
+                $yuk->from_location = Port::find($yuk->from_location)?->name ?? 'Bilinmiyor';
+                $yuk->to_location = Port::find($yuk->to_location)?->name ?? 'Bilinmiyor';
+            }
+        
         } else {
             // Gemi sahibi veya admin için görünmeyecek (gerekirse boş bırak)
             $yukler = collect(); // Boş koleksiyon döndür
@@ -37,13 +44,13 @@ class YukController extends Controller
             return redirect()->route('profile.edit')
                 ->with('error', 'Yük eklemek için yük veren profilinizi tamamlamanız gerekiyor.');
         }
-
-        return view('yukler.create');
+        $ports = \App\Models\Port::orderBy('name')->get();
+        return view('yukler.create', compact('ports'));
     }
 
     /**
      * Yeni eklenen yükü kaydet.
-     */
+     */ 
     public function store(Request $request)
     {
         // Sadece yük veren tipi kullanıcılar yük ekleyebilir
@@ -106,11 +113,21 @@ class YukController extends Controller
         if (auth()->id() !== $yuk->user_id) {
             abort(403); // Yetkisiz erişim
         }
+        $startPort = \App\Models\Port::find($yuk->from_location);
+        $endPort = \App\Models\Port::find($yuk->to_location);
         // Use the matching service to find compatible routes
         $matchingService = app(ShipCargoMatchingService::class);
         $matchingRoutes = app(ShipCargoMatchingService::class)->findMatchingShipsForCargo($yuk);
+        $muhtemelRotalar = \App\Models\GemiRoute::where('available_capacity', '>=', $yuk->weight)
+        ->whereDate('departure_date', '<=', $yuk->desired_delivery_date)
+        ->whereDoesntHave('matchedYukler', function ($q) use ($yuk) {
+            $q->where('id', $yuk->id); // bu yük zaten eşleşmesin
+        })
+        ->with('user')
+        ->latest()
+        ->get();
         
-        return view('yukler.show', compact('yuk', 'matchingRoutes'));
+        return view('yukler.show', compact('yuk', 'matchingRoutes','startPort','endPort', 'muhtemelRotalar'));
     }
 
     /**
@@ -123,8 +140,8 @@ class YukController extends Controller
             return redirect()->route('yukler.index')
                 ->with('error', 'Bu yükü düzenleme yetkiniz yok.');
         }
-
-        return view('yukler.edit', compact('yuk'));
+        $ports = \App\Models\Port::orderBy('name')->get();
+        return view('yukler.edit', compact('yuk','ports'));
     }
 
     /**

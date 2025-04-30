@@ -172,6 +172,7 @@
                                 <div>
                                     <a href="{{ route('yukler.show', $yuk) }}" class="text-decoration-none">{{ $yuk->title }}</a>
                                     <small class="d-block text-muted">{{ number_format($yuk->weight, 2) }} kg</small>
+                                    <small class="d-block text-muted">{{ $yuk->fromPort->name ?? $yuk->from_location }} -> {{$yuk->toPort->name ?? $yuk->to_location}}</small>
                                     <small class="d-block">
                                         <span class="badge 
                                             @if($yuk->match_status === 'pending') bg-warning
@@ -198,6 +199,18 @@
                                             @endswitch
                                         </span>
                                     </small>
+                                    @if($yuk->match_status === 'pending')
+                                        <div class="mt-2">
+                                            <form action="{{ route('matched-cargos.approve', $yuk->pivot->id ?? $yuk->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-success">Onayla</button>
+                                            </form>
+                                            <form action="{{ route('matched-cargos.reject', $yuk->pivot->id ?? $yuk->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-danger">Reddet</button>
+                                            </form>
+                                        </div>
+                                    @endif
                                 </div>
                                 <span class="badge bg-primary rounded-pill">{{ number_format($yuk->proposed_price, 2) }} TL</span>
                             </li>

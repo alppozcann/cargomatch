@@ -22,6 +22,48 @@
         </div>
     </div>
 
+    @if($muhtemelRotalar->isNotEmpty())
+    <div class="col-md-12 mt-5">
+        <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Bilgilendirme: Bu Yükle Potansiyel Olarak Eşleşebilecek Diğer Rotalar</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Rota</th>
+                                <th>Kapasite</th>
+                                <th>Fiyat</th>
+                                <th>Tarih</th>
+                                <th>Sahibi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($muhtemelRotalar as $rota)
+                                <tr>
+                                    <td>
+                                        <strong>{{ $rota->title }}</strong><br>
+                                        <small class="text-muted">{{ $rota->start_location }} → {{ $rota->end_location }}</small>
+                                    </td>
+                                    <td>{{ number_format($rota->available_capacity, 2) }} kg</td>
+                                    <td>{{ number_format($rota->price, 2) }} TL</td>
+                                    <td>
+                                        Kalkış: {{ optional($rota->departure_date)->format('d.m.Y') }}<br>
+                                        Varış: {{ optional($rota->arrival_date)->format('d.m.Y') }}
+                                    </td>
+                                    <td>{{ $rota->user->name }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="row">
         <div class="col-md-4">
             <div class="card shadow-lg border-0 rounded-lg mb-4">

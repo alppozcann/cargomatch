@@ -123,6 +123,15 @@ if ($existingRoute) {
         // ShipCargoMatchingService'i kullanarak eşleşebilecek yükleri bul
         $matchingService = new \App\Services\ShipCargoMatchingService();
         $matchingYukler = $matchingService->findMatchingCargoForShip($gemiRoute);
+        // Sadece rota ile uyumlu yükleri göster
+        $matchingYukler = $matchingYukler->filter(function ($yuk) use ($gemiRoute) {
+            $allRoutePorts = array_merge(
+                [$gemiRoute->start_location],
+                $gemiRoute->way_points ?? [],
+                [$gemiRoute->end_location]
+            );
+            return in_array($yuk->start_location, $allRoutePorts) && in_array($yuk->end_location, $allRoutePorts);
+        });
     
         // Başlangıç ve varış limanlarını isim olarak al
         $startPort = \App\Models\Port::find($gemiRoute->start_location);
@@ -308,5 +317,26 @@ public function confirmDeliveryComplete(Yuk $yuk)
     ]);
 
     return back()->with('success', 'Teslimat tamamlandı. Süreç %100.');
+}
+
+public function rejectMatch(Yuk $yuk)
+{
+    $gemiRoute = $yuk->matchedGemiRoute;
+
+    if (!$gemiRoute || auth()->id() !== $gemiRoute->user_id) {
+        return back()->with('error', 'Bu eşleştirmeyi reddetme yetkiniz yok.');
+    }
+
+    if ($yuk->match_status !== 'pending') {
+        return back()->with('error', 'Bu yük zaten işleme alınmış.');
+    }
+
+    $yuk->update([
+        'match_status' => 'rejected',
+        'status' => 'active',
+        'matched_gemi_route_id' => null,
+    ]);
+
+    return back()->with('success', 'Eşleşme reddedildi.');
 }
 }

@@ -69,5 +69,10 @@ class User extends Authenticatable
 	{
 		return $this->hasMany(Yuk::class);
 	}
+    public function gemiler()
+    {
+        return $this->hasMany(Ship::class);
+    }
+
 }
 

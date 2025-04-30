@@ -19,6 +19,9 @@ class ShipCargoMatchingService
     {
         // Yalnızca kapasite ve tarih kriteri
         $query = Yuk::where('status', 'active')
+            ->where('from_location', $gemiRoute->start_port_id)
+            ->where('to_location', $gemiRoute->end_port_id)
+            ->where('match_status','pending')
             ->where('weight', '<=', $gemiRoute->available_capacity)
             ->where('desired_delivery_date', '>=', $gemiRoute->departure_date);
     
@@ -30,7 +33,21 @@ class ShipCargoMatchingService
             $cargo->match_score = $this->calculateMatchScore($cargo, $gemiRoute);
             return $cargo;
         });
-    
+
+        // Konum tabanlı uyumluluğu açıkça filtrele
+        $matchingCargo = $matchingCargo->filter(function ($cargo) use ($gemiRoute) {
+            $routePorts = collect($gemiRoute->way_points)
+                ->pluck('port_id')
+                ->prepend($gemiRoute->start_port_id)
+                ->push($gemiRoute->end_port_id)
+                ->values();
+
+            $fromIndex = $routePorts->search($cargo->from_location);
+            $toIndex = $routePorts->search($cargo->to_location);
+
+            return $fromIndex !== false && $toIndex !== false && $fromIndex < $toIndex;
+        });
+
         // Skoru düşük olanları filtreleyebilirsin (isteğe bağlı)
         return $matchingCargo
             ->filter(fn($cargo) => $cargo->match_score >= 0.1)
@@ -103,33 +120,20 @@ class ShipCargoMatchingService
      */
     public function calculateLocationMatchScore(Yuk $yuk, GemiRoute $gemiRoute): float
     {
-        $shipRoute = collect([$gemiRoute->start_location]);
-        if (!empty($gemiRoute->way_points)) {
-            $shipRoute = $shipRoute->concat($gemiRoute->way_points);
-        }
-        $shipRoute->push($gemiRoute->end_location);
-    
+        $shipRoute = collect($gemiRoute->way_points)
+            ->pluck('port_id')
+            ->prepend($gemiRoute->start_port_id)
+            ->push($gemiRoute->end_port_id)
+            ->values();
 
-    
-        if ($shipRoute->contains($yuk->from_location) && $shipRoute->contains($yuk->to_location)) {
-            $fromIndex = $shipRoute->search($yuk->from_location);
-            $toIndex = $shipRoute->search($yuk->to_location);
-    
-    
-            if ($fromIndex !== false && $toIndex !== false && $fromIndex < $toIndex) {
-                return 1.0;
-            } elseif ($fromIndex < $toIndex) {
-                return 0.7;
-            } else {
-                return 0.3;
-            }
+        $fromIndex = $shipRoute->search($yuk->from_location);
+        $toIndex = $shipRoute->search($yuk->to_location);
+
+        if ($fromIndex === false || $toIndex === false || $fromIndex >= $toIndex) {
+            return 0.0;
         }
-    
-        if ($shipRoute->contains($yuk->from_location) || $shipRoute->contains($yuk->to_location)) {
-            return 0.4;
-        }
-    
-        return 0.0;
+
+        return 1.0;
     }
 
     /**

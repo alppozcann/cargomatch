@@ -83,21 +83,27 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-4">
-                                <label for="from_location" class="form-label">Nereden</label>
-                                <input type="text" class="form-control @error('from_location') is-invalid @enderror" id="from_location" name="from_location" value="{{ old('from_location') }}" required>
-                                @error('from_location')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                            <div class="row">
+                        <div class="col-md-6 mb-5">
+                            <label for="departure_port" class="form-label">Başlangıç Limanı</label>
+                            <select class="form-control select2" id="departure_port" name="from_location" required>
+                                <option value="">Bir liman seçin</option>
+                                @foreach($ports as $port)
+                                    <option value="{{ $port->id }}">{{ $port->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                            <div class="col-md-6 mb-4">
-                                <label for="to_location" class="form-label">Nereye</label>
-                                <input type="text" class="form-control @error('to_location') is-invalid @enderror" id="to_location" name="to_location" value="{{ old('to_location') }}" required>
-                                @error('to_location')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="col-md-6 mb-5">
+                            <label for="arrival_port" class="form-label">Varış Limanı</label>
+                            <select class="form-control select2" id="arrival_port" name="to_location" required>
+                                <option value="">Bir liman seçin</option>
+                                @foreach($ports as $port)
+                                    <option value="{{ $port->id }}">{{ $port->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
                             <div class="col-md-6 mb-4">
                                 <label for="desired_delivery_date" class="form-label">İstenen Teslimat Tarihi</label>
