@@ -58,6 +58,7 @@ class GemiRouteController extends Controller
             return redirect()->route('gemi_routes.index')
                 ->with('error', 'Rota eklemek için gemici profilinizi tamamlamanız gerekiyor.');
         }
+        dd($request->all());
         $shipId = $request->ship_id; // Kullanıcı formdan seçtiyse
 
         $existingRoute = GemiRoute::where('ship_id', $shipId)
@@ -77,7 +78,8 @@ if ($existingRoute) {
             'start_location' => 'required|string|max:255',
             'end_location' => 'required|string|max:255',
             'way_points' => 'nullable|array',
-            'way_points.*' => 'nullable|string|max:255',
+            'way_points.*.port_id' => 'required|integer',
+            'way_points.*.date' => 'required|date',
             'available_capacity' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
             'departure_date' => 'required|date',
@@ -88,7 +90,25 @@ if ($existingRoute) {
         ]);
 
         // Way points array'ini temizle (boş olanları kaldır)
-        $wayPoints = array_filter($request->way_points ?? []);
+        $wayPoints = array_values(array_filter($request->way_points ?? [], function ($item) {
+            return !empty($item['port_id']) && !empty($item['date']);
+        }));
+
+        \Log::debug('Store request data', [
+            'user_id' => Auth::id(),
+            'ship_id' => $request->ship_id,
+            'title' => $request->title,
+            'start_location' => $request->start_location,
+            'end_location' => $request->end_location,
+            'way_points' => $request->way_points,
+            'available_capacity' => $request->available_capacity,
+            'price' => $request->price,
+            'departure_date' => $request->departure_date,
+            'arrival_date' => $request->arrival_date,
+            'description' => $request->description,
+            'weight_type' => $request->weight_type,
+            'currency_type' => $request->currency_type,
+        ]);
 
         $gemiRoute = GemiRoute::create([
             'user_id' => Auth::id(),
@@ -106,9 +126,11 @@ if ($existingRoute) {
             'currency_type' => $request->currency_type,
             'status' => 'active',
         ]);
+        \Log::info('Yeni rota ID:', ['id' => $gemiRoute?->id]);
 
-        return redirect()->route('gemi_routes.show', $gemiRoute)
-            ->with('success', 'Gemi rotası başarıyla eklendi.');
+        return $gemiRoute
+            ? redirect()->route('gemi_routes.show', $gemiRoute)->with('success', 'Gemi rotası başarıyla eklendi.')
+            : back()->with('error', 'Bir hata oluştu, rota kaydedilemedi.');
     }
 
     /**

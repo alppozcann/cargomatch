@@ -104,14 +104,38 @@
                             </select>
                         </div>
                     </div>
-
-                            <div class="col-md-6 mb-4">
-                                <label for="desired_delivery_date" class="form-label">İstenen Teslimat Tarihi</label>
-                                <input type="date" class="form-control @error('desired_delivery_date') is-invalid @enderror" id="desired_delivery_date" name="desired_delivery_date" value="{{ old('desired_delivery_date') }}" required>
-                                @error('desired_delivery_date')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                    <div class="col-12 mb-4">
+    <label class="form-label">Ara Duraklar ve Tahmini Varış Tarihleri</label>
+    <div id="waypoints-container">
+        <div class="d-flex gap-2 align-items-center mb-2 waypoint-row">
+            <select class="form-control select2 flex-grow-1" name="way_points[0][port_id]">
+                <option value="">Ara durak limanı seçin</option>
+                @foreach($ports as $port)
+                    <option value="{{ $port->id }}">{{ $port->name }}</option>
+                @endforeach
+            </select>
+            <input type="date" class="form-control" name="way_points[0][date]" placeholder="Varış Tarihi (ETA)">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-waypoint">Kaldır</button>
+        </div>
+    </div>
+    <button type="button" id="add-waypoint" class="btn btn-sm btn-outline-primary mt-2">+ Ara Durak Ekle</button>
+</div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="shipping_date" class="form-label">Gönderim (Yükleme) Tarihi</label>
+                            <input type="date" name="shipping_date" class="form-control" value="{{ old('shipping_date', $yuk->shipping_date ?? '') }}">
+                            @error('shipping_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="desired_delivery_date" class="form-label">İstenen Teslimat Tarihi</label>
+                            <input type="date" class="form-control @error('desired_delivery_date') is-invalid @enderror" id="desired_delivery_date" name="desired_delivery_date" value="{{ old('desired_delivery_date') }}" required>
+                            @error('desired_delivery_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
 
                             <div class="col-md-6 mb-4">
                                 <label class="form-label">Boyutlar (opsiyonel)</label>
@@ -227,4 +251,36 @@
         border-radius: 0.5rem;
     }
 </style>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let waypointIndex = 1;
+
+        document.getElementById('add-waypoint').addEventListener('click', function () {
+            const container = document.getElementById('waypoints-container');
+            const div = document.createElement('div');
+            div.className = 'd-flex gap-2 align-items-center mb-2 waypoint-row';
+            div.innerHTML = `
+                <select class="form-control select2 flex-grow-1" name="way_points[${waypointIndex}][port_id]">
+                    <option value="">Ara durak limanı seçin</option>
+                    @foreach($ports as $port)
+                        <option value="{{ $port->id }}">{{ $port->name }}</option>
+                    @endforeach
+                </select>
+                <input type="date" class="form-control" name="way_points[${waypointIndex}][date]" placeholder="Varış Tarihi (ETA)">
+                <button type="button" class="btn btn-outline-danger btn-sm remove-waypoint">Kaldır</button>
+            `;
+            container.appendChild(div);
+            waypointIndex++;
+        });
+
+        document.getElementById('waypoints-container').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-waypoint')) {
+                e.target.parentElement.remove();
+            }
+        });
+    });
+</script>
 @endsection

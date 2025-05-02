@@ -8,6 +8,15 @@
                 <h4>Yeni Gemi Rotası Ekle</h4>
             </div>
             <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('gemi_routes.store') }}">
                     @csrf
                     
@@ -52,16 +61,18 @@
                     
                     <div class="mb-3">
                         <label for="waypoint_port" class="form-label">Ara Duraklar</label>
-                        <div class="input-group mb-2 align-items-center">
-                            <select class="form-control select2" id="waypoint_port" name="way_points[]" style="width: 90%;">
-                                <option value="">Ara durak limanı seçin</option>
-                                @foreach($ports as $port)
-                                    <option value="{{ $port->id }}">{{ $port->name }}</option>
-                                @endforeach
-                            </select>
-                            <button type="button" id="add-waypoint" class="btn btn-sm btn-outline-primary">+ Ara Durak Ekle</button>
+                        <div id="waypoints-container">
+                            <div class="d-flex gap-2 align-items-center mb-2">
+                                <select class="form-control select2 flex-grow-1" name="way_points[][port_id]">
+                                    <option value="">Ara durak limanı seçin</option>
+                                    @foreach($ports as $port)
+                                        <option value="{{ $port->id }}">{{ $port->name }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="date" class="form-control" name="way_points[][date]" placeholder="Varış Tarihi (ETA)">
+                                <button type="button" id="add-waypoint" class="btn btn-sm btn-outline-primary">+ Ara Durak Ekle</button>
+                            </div>
                         </div>
-                        <div id="waypoints-container"></div> 
                     </div>
                 </div>
                     <div class="row">
@@ -140,9 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const wrapper = document.createElement('div');
         wrapper.className = 'd-flex gap-2 align-items-center mb-2'; // ✅ responsive yapı
         wrapper.innerHTML = `
-            <select class="form-control select2 flex-grow-1" name="way_points[]">
+            <select class="form-control select2 flex-grow-1" name="way_points[][port_id]">
                 ${portOptions}
             </select>
+            <input type="date" class="form-control" name="way_points[][date]" placeholder="Varış Tarihi (ETA)">
             <button type="button" class="btn btn-outline-danger btn-sm remove-waypoint">Kaldır</button>
         `;
         container.appendChild(wrapper);
@@ -159,6 +171,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.classList.contains('remove-waypoint')) {
             e.target.closest('.d-flex').remove();
         }
+    });
+
+    // Boş waypoint'leri submit öncesi temizle (güncel versiyon)
+    const form = document.querySelector('form[action="{{ route('gemi_routes.store') }}"]');
+    form.addEventListener('submit', function(e) {
+        const waypoints = document.querySelectorAll('#waypoints-container .input-group, #waypoints-container .d-flex');
+        waypoints.forEach(wp => {
+            const port = wp.querySelector('select')?.value;
+            const date = wp.querySelector('input[type="date"]')?.value;
+            if (!port || !date) {
+                wp.remove();
+            }
+        });
     });
 });
 

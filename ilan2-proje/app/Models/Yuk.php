@@ -29,6 +29,7 @@ class Yuk extends Model
         'matched_gemi_route_id', // Eşleştirildiği gemi rotası
         'currency', // Para birimi
         'weight_unit', // Ağırlık birimi
+        'shipping_date', // Gönderim tarihi
     ];
 
     /**
@@ -39,6 +40,7 @@ class Yuk extends Model
     protected $casts = [
         'dimensions' => 'array',
         'desired_delivery_date' => 'datetime',
+        'shipping_date' => 'datetime',
     ];
 
     /**

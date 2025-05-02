@@ -22,10 +22,15 @@
                         <p class="mb-1"><strong>Başlangıç:</strong> {{ $startPort->name ?? 'Bilinmiyor' }}</p>
                         <p class="mb-1"><strong>Bitiş:</strong> {{ $endPort->name ?? 'Bilinmiyor' }}</p>
                         @if(count($gemiRoute->way_points) > 0)
-                            <p class="mb-1">
-                                <strong>Ara Duraklar:</strong>
-                                {{ implode(' → ', $waypoints) }}
-                            </p>
+                            <p class="mb-1"><strong>Ara Duraklar ve Tahmini Varış Tarihleri:</strong></p>
+                            <ul class="list-group list-group-flush mb-2">
+                                @foreach($gemiRoute->way_points as $point)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        <span>{{ \App\Models\Port::find($point['port_id'])?->name ?? 'Bilinmiyor' }}</span>
+                                        <span class="text-muted">{{ isset($point['date']) ? \Carbon\Carbon::parse($point['date'])->format('d.m.Y') : 'Tarih yok' }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
                         @endif
                         <p class="mb-1">
                             <strong>Hareket Tarihi:</strong> 

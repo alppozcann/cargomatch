@@ -73,6 +73,7 @@ class YukController extends Controller
             'description' => 'nullable|string',
             'currency' => 'required|string|max:3',
             'weight_unit' => 'required|string|max:4',
+            'shipping_date' => 'nullable|date',
         ]);
 
         // Boyutları JSON olarak formatlama
@@ -99,6 +100,7 @@ class YukController extends Controller
             'status' => 'active',
             'currency' => $request->currency,
             'weight_unit' => $request->weight_unit,
+            'shipping_date' => $request->shipping_date,
         ]);
 
         return redirect()->route('yukler.show', $yuk)
@@ -167,6 +169,7 @@ class YukController extends Controller
             'proposed_price' => 'required|numeric|min:0',
             'desired_delivery_date' => 'required|date',
             'description' => 'nullable|string',
+            'shipping_date' => 'nullable|date',
         ]);
 
         // Boyutları JSON olarak formatlama
@@ -189,6 +192,7 @@ class YukController extends Controller
             'proposed_price' => $request->proposed_price,
             'desired_delivery_date' => $request->desired_delivery_date,
             'description' => $request->description,
+            'shipping_date' => $request->shipping_date,
         ]);
 
         return redirect()->route('yukler.show', $yuk)

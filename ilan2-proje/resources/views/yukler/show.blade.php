@@ -52,6 +52,20 @@
                                     <td>
                                         Kalkış: {{ optional($rota->departure_date)->format('d.m.Y') }}<br>
                                         Varış: {{ optional($rota->arrival_date)->format('d.m.Y') }}
+                                        @php
+                                            $gap = $yuk->shipping_date ? \Carbon\Carbon::parse($rota->departure_date)->diffInDays($yuk->shipping_date, false) : null;
+                                        @endphp
+                                        @if (!is_null($gap))
+                                            <div class="mt-1 fw-semibold {{ $gap === 0 ? 'text-success' : 'text-danger' }}">
+                                                @if ($gap === 0)
+                                                    Aynı gün
+                                                @elseif ($gap > 0)
+                                                    {{ $gap }} gün sonra
+                                                @else
+                                                    {{ abs($gap) }} gün önce
+                                                @endif
+                                            </div>
+                                        @endif
                                     </td>
                                     <td>{{ $rota->user->name }}</td>
                                 </tr>

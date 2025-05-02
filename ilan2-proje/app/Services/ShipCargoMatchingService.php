@@ -107,6 +107,14 @@ class ShipCargoMatchingService
         // Price compatibility (20% of total score)
         $priceScore = $this->calculatePriceScore($yuk, $gemiRoute);
         $score += $priceScore * 0.2;
+
+        // Shipping date compatibility (10% of total score)
+        $shippingScore = $this->calculateShippingDateScore($yuk, $gemiRoute);
+        $score += $shippingScore * 0.1;
+
+        // Waypoint ETA match score (10%)
+        $waypointScore = $this->calculateWaypointEtaScore($yuk, $gemiRoute);
+        $score += $waypointScore * 0.1;
         
         return $score;
     }
@@ -257,4 +265,59 @@ private function calculateTimeScore(Yuk $yuk, GemiRoute $gemiRoute): float
     }
 }
 
-} 
+private function calculateShippingDateScore(Yuk $yuk, GemiRoute $gemiRoute): float
+{
+    if (!$yuk->shipping_date || !$gemiRoute->departure_date) {
+        return 0.0;
+    }
+
+    $gapDays = $yuk->shipping_date->diffInDays($gemiRoute->departure_date, false);
+
+    if ($gapDays === 0) {
+        return 1.0; // perfect match
+    } elseif ($gapDays >= -1 && $gapDays <= 1) {
+        return 0.8;
+    } elseif ($gapDays >= -3 && $gapDays <= 3) {
+        return 0.6;
+    } elseif ($gapDays >= -7 && $gapDays <= 7) {
+        return 0.4;
+    } else {
+        return 0.2;
+    }
+}
+
+    /**
+     * Calculate waypoint ETA match score
+     *
+     * @param Yuk $yuk
+     * @param GemiRoute $gemiRoute
+     * @return float
+     */
+    private function calculateWaypointEtaScore(Yuk $yuk, GemiRoute $gemiRoute): float
+    {
+        if (!$yuk->from_location || !$yuk->shipping_date || empty($gemiRoute->way_points)) {
+            return 0.0;
+        }
+
+        foreach ($gemiRoute->way_points as $point) {
+            if ($point['port_id'] == $yuk->from_location && !empty($point['date'])) {
+                $gapDays = \Carbon\Carbon::parse($point['date'])->diffInDays($yuk->shipping_date, false);
+
+                if ($gapDays === 0) {
+                    return 1.0;
+                } elseif (abs($gapDays) <= 1) {
+                    return 0.8;
+                } elseif (abs($gapDays) <= 3) {
+                    return 0.6;
+                } elseif (abs($gapDays) <= 7) {
+                    return 0.4;
+                } else {
+                    return 0.2;
+                }
+            }
+        }
+
+        return 0.0; // no matching waypoint found
+    }
+
+}
