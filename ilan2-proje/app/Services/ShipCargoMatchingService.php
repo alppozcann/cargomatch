@@ -16,43 +16,44 @@ class ShipCargoMatchingService
      * @return Collection
      */
     public function findMatchingCargoForShip(GemiRoute $gemiRoute): Collection
-    {
-        // Yalnızca kapasite ve tarih kriteri
-        $query = Yuk::where('status', 'active')
-            ->where('from_location', $gemiRoute->start_port_id)
-            ->where('to_location', $gemiRoute->end_port_id)
-            ->where('match_status','pending')
-            ->where('weight', '<=', $gemiRoute->available_capacity)
-            ->where('desired_delivery_date', '>=', $gemiRoute->departure_date);
+{
+    $yukTeslimTarihiAltLimit = $gemiRoute->departure_date->subMonths(6);
+    $yukTeslimTarihiUstLimit = $gemiRoute->departure_date->addMonths(6);
     
-        // Aday yükleri al
-        $matchingCargo = $query->get();
-    
-        // Her biri için eşleşme skoru hesapla
-        $matchingCargo->transform(function ($cargo) use ($gemiRoute) {
-            $cargo->match_score = $this->calculateMatchScore($cargo, $gemiRoute);
-            return $cargo;
-        });
 
-        // Konum tabanlı uyumluluğu açıkça filtrele
-        $matchingCargo = $matchingCargo->filter(function ($cargo) use ($gemiRoute) {
-            $routePorts = collect($gemiRoute->way_points)
-                ->pluck('port_id')
-                ->prepend($gemiRoute->start_port_id)
-                ->push($gemiRoute->end_port_id)
-                ->values();
+    // Ön filtre (tarih, kapasite, durum)
+    $query = Yuk::where('status', 'active')
+        ->where('match_status', 'pending')
+        ->where('weight', '<=', $gemiRoute->available_capacity)
+        ->whereBetween('desired_delivery_date', [$yukTeslimTarihiAltLimit, $yukTeslimTarihiUstLimit]);
 
-            $fromIndex = $routePorts->search($cargo->from_location);
-            $toIndex = $routePorts->search($cargo->to_location);
+    $matchingCargo = $query->get();
 
-            return $fromIndex !== false && $toIndex !== false && $fromIndex < $toIndex;
-        });
+    // Rota limanları sıralı
+    $allRoutePorts = array_merge(
+        [$gemiRoute->start_port_id],
+        $gemiRoute->way_points ?? [],
+        [$gemiRoute->end_port_id]
+    );
 
-        // Skoru düşük olanları filtreleyebilirsin (isteğe bağlı)
-        return $matchingCargo
-            ->filter(fn($cargo) => $cargo->match_score >= 0.1)
-            ->sortByDesc('match_score');
-    }
+    // Sıralı liman eşleşmesini filtrele
+    $matchingCargo = $matchingCargo->filter(function ($cargo) use ($allRoutePorts) {
+        $startIndex = array_search($cargo->from_location, $allRoutePorts);
+        $endIndex = array_search($cargo->to_location, $allRoutePorts);
+
+        return $startIndex !== false && $endIndex !== false && $startIndex < $endIndex;
+    });
+
+    // Skor ekle
+    $matchingCargo->transform(function ($cargo) use ($gemiRoute) {
+        $cargo->match_score = $this->calculateMatchScore($cargo, $gemiRoute);
+        return $cargo;
+    });
+
+    return $matchingCargo;
+}
+
+
     
 
     /**
@@ -62,22 +63,48 @@ class ShipCargoMatchingService
      * @return Collection
      */
     public function findMatchingShipsForCargo(Yuk $yuk): Collection
-{
-    $ships = GemiRoute::where('status', 'active')->get();
-
-    // Her rota için skor hesapla
-    $ships->transform(function ($ship) use ($yuk) {
-        $ship->match_score = $this->calculateMatchScore($yuk, $ship);
-        return $ship;
-    });
-
-    // Skorları logla test için
-    foreach ($ships as $ship) {
-        \Log::info("Route ID {$ship->id} → Match Score: {$ship->match_score}");
+    {
+        $now = now();
+        $targetDate = $yuk->desired_delivery_date ?? $now;
+        $minDate = $targetDate->copy()->subMonths(12);
+        $maxDate = $targetDate->copy()->addMonths(12);
+    
+        $ships = GemiRoute::where('status', 'active')
+            //->whereBetween('arrival_date', [$minDate, $maxDate])
+            ->get();    
+    
+            $filtered = $ships->filter(function ($ship) use ($yuk) {
+                $portSequence = collect($ship->way_points ?? [])
+                    ->prepend($ship->start_location)
+                    ->push($ship->end_location)
+                    ->values();
+            
+                $fromIndex = $portSequence->search(fn($val) => (int)$val === (int)$yuk->from_location);
+                $toIndex = $portSequence->search(fn($val) => (int)$val === (int)$yuk->to_location);
+            
+                if ($fromIndex === false && (int)$ship->start_port_id === (int)$yuk->from_location) {
+                    $fromIndex = 0;
+                }
+            
+                if ($toIndex === false && (int)$ship->end_port_id === (int)$yuk->to_location) {
+                    $toIndex = $portSequence->count() - 1;
+                }
+                        
+                return $fromIndex !== false && $toIndex !== false && $fromIndex < $toIndex;
+            });
+            
+    
+        $scored = $filtered->map(function ($ship) use ($yuk) {
+            $ship->match_score = $this->calculateMatchScore($yuk, $ship);
+            return $ship;
+        });
+    
+        return $scored->sortByDesc('match_score')->values();
     }
-
-    return $ships->sortByDesc('match_score'); // Filtreleme yapmadan direkt dön
-}
+    
+    
+        
+    
 
 
     /**

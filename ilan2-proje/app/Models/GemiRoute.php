@@ -44,6 +44,15 @@ class GemiRoute extends Model
 	{
     	return $this->belongsTo(Ship::class, 'ship_id');
 	}
+	public function startPort()
+	{
+    	return $this->belongsTo(Port::class, 'start_location');
+	}
+
+	public function endPort()
+	{
+    	return $this->belongsTo(Port::class, 'end_location');
+	}
 
 }
 

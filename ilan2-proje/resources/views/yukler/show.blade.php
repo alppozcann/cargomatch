@@ -22,61 +22,7 @@
         </div>
     </div>
 
-    @if($muhtemelRotalar->isNotEmpty())
-    <div class="col-md-12 mt-5">
-        <div class="card shadow-lg border-0 rounded-lg">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0">Bilgilendirme: Bu Yükle Potansiyel Olarak Eşleşebilecek Diğer Rotalar</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>Rota</th>
-                                <th>Kapasite</th>
-                                <th>Fiyat</th>
-                                <th>Tarih</th>
-                                <th>Sahibi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($muhtemelRotalar as $rota)
-                                <tr>
-                                    <td>
-                                        <strong>{{ $rota->title }}</strong><br>
-                                        <small class="text-muted">{{ $rota->start_location }} → {{ $rota->end_location }}</small>
-                                    </td>
-                                    <td>{{ number_format($rota->available_capacity, 2) }} kg</td>
-                                    <td>{{ number_format($rota->price, 2) }} TL</td>
-                                    <td>
-                                        Kalkış: {{ optional($rota->departure_date)->format('d.m.Y') }}<br>
-                                        Varış: {{ optional($rota->arrival_date)->format('d.m.Y') }}
-                                        @php
-                                            $gap = $yuk->shipping_date ? \Carbon\Carbon::parse($rota->departure_date)->diffInDays($yuk->shipping_date, false) : null;
-                                        @endphp
-                                        @if (!is_null($gap))
-                                            <div class="mt-1 fw-semibold {{ $gap === 0 ? 'text-success' : 'text-danger' }}">
-                                                @if ($gap === 0)
-                                                    Aynı gün
-                                                @elseif ($gap > 0)
-                                                    {{ $gap }} gün sonra
-                                                @else
-                                                    {{ abs($gap) }} gün önce
-                                                @endif
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <td>{{ $rota->user->name }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
+
 
     <div class="row">
         <div class="col-md-4">
@@ -111,7 +57,8 @@
                     </div>
                     <div class="mb-3">
                         <h6 class="text-muted mb-2">Rota</h6>
-                        <p class="mb-0">{{ $yuk->from_location }} → {{ $yuk->to_location }}</p>
+                        <p class="mb-0">{{ optional($yuk->fromPort)->name }} → {{ optional($yuk->toPort)->name }}</p>
+
                     </div>
                     <div class="mb-3">
                         <h6 class="text-muted mb-2">Teklif Edilen Fiyat</h6>
@@ -119,7 +66,8 @@
                     </div>
                     <div class="mb-3">
                         <h6 class="text-muted mb-2">İstenen Teslimat Tarihi</h6>
-                        <p class="mb-0">{{ optional($yuk->desired_delivery_date)->format('d.m.Y') }}</p>
+                        <p class="mb-0">{{ $yuk->desired_delivery_date?->format('d.m.Y') ?? 'Belirtilmemiş' }}</p>
+
                     </div>
                     <div class="mb-3">
                         <h6 class="text-muted mb-2">Durum</h6>
@@ -165,114 +113,82 @@
                     </div>
                     @endif
                     
-                    @if($yuk->matched_at)
-                    <div class="mb-3">
-                        <h6 class="text-muted mb-2">Eşleşme Tarihi</h6>
-                        <p class="mb-0">{{ $yuk->matched_at->format('d.m.Y H:i') }}</p>
-                    </div>
-                    @endif
-                    
-                    @if($yuk->match_notes)
-                    <div class="mb-3">
-                        <h6 class="text-muted mb-2">Eşleşme Notları</h6>
-                        <p class="mb-0">{{ $yuk->match_notes }}</p>
-                    </div>
-                    @endif
-                    
-                    @if($yuk->description)
-                        <div class="mb-3">
-                            <h6 class="text-muted mb-2">Açıklama</h6>
-                            <p class="mb-0">{{ $yuk->description }}</p>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
 
         <div class="col-md-8">
-            <div class="card shadow-lg border-0 rounded-lg">
-                <div class="card-header bg-white py-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Eşleşebilecek Rotalar</h5>
-                        <div class="d-flex align-items-center">
-                            <label class="me-2">Sırala:</label>
-                            <select class="form-select" id="sortRoutes" style="width: auto;">
-                                <option value="score">Eşleşme Puanı</option>
-                                <option value="price">Fiyat</option>
-                                <option value="date">Tarih</option>
-                                <option value="capacity">Kapasite</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if($matchingRoutes->isNotEmpty())
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th>Rota</th>
-                                        <th>Kapasite</th>
-                                        <th>Fiyat</th>
-                                        <th>Tarih</th>
-                                        <th>Eşleşme</th>
-                                        <th class="text-end">İşlemler</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="routesTableBody">
-                                    @foreach($matchingRoutes as $route)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div>
-                                                        <h6 class="mb-0">{{ $route->title }}</h6>
-                                                        <small class="text-muted">{{ $route->start_location }} → {{ $route->end_location }}</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{{ number_format($route->available_capacity, 2) }} kg</td>
-                                            <td>{{ number_format($route->price, 2) }} TL</td>
-                                            <td>
-                                                <div>Kalkış: {{ optional($route->departure_date)->format('d.m.Y') }}</div>
-                                                <div>Varış: {{ optional($route->arrival_date)->format('d.m.Y') }}</div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="progress flex-grow-1" style="height: 6px;">
-                                                        <div class="progress-bar bg-success" role="progressbar" 
-                                                             style="width: {{ $route->match_score * 100 }}%"
-                                                             aria-valuenow="{{ $route->match_score * 100 }}" 
-                                                             aria-valuemin="0" 
-                                                             aria-valuemax="100"></div>
-                                                    </div>
-                                                    <span class="ms-2">{{ number_format($route->match_score * 100, 0) }}%</span>
-                                                </div>
-                                            </td>
-                                            <td class="text-end">
-                                                <a href="{{ route('gemi_routes.show', $route) }}" class="btn btn-sm btn-outline-primary me-2">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
-                                                @if($yuk->status === 'active')
-                                                    <form action="{{ route('yukler.request_match', ['yuk' => $yuk, 'gemiRoute' => $route]) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Bu rotaya eşleşme talebi göndermek istediğinize emin misiniz?')">
-                                                            <i class="bi bi-link-45deg"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="alert alert-info mb-0">
-                            Bu yük için eşleşebilecek rota bulunamadı.
-                        </div>
-                    @endif
-                </div>
-            </div>
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Bu Yükle Potansiyel Olarak Eşleşebilecek Diğer Rotalar</h5>
+        </div>
+        <div class="card-body">
+            @if($matchingRoutes && count($matchingRoutes) > 0)
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Rota</th>
+                            <th>Kapasite</th>
+                            <th>Fiyat</th>
+                            <th>Tarih</th>
+                            <th>Sahibi</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="routesTableBody">
+                        @foreach($matchingRoutes as $rota)
+                        <tr>
+                            <td>
+                            @php
+    $fromId = $yuk->from_location;
+    $toId = $yuk->to_location;
+    $waypointIds = collect($rota->way_points ?? [])->values();
+
+    $fromIdx = $waypointIds->search(fn($val) => (int)$val === (int)$fromId);
+    $toIdx = $waypointIds->search(fn($val) => (int)$val === (int)$toId);
+
+    if ($waypointIds->isEmpty()) {
+        echo optional($rota->startPort)->name . " → " . optional($rota->endPort)->name;
+    } elseif ($fromIdx !== false && $toIdx !== false && $fromIdx < $toIdx) {
+        $fromName = optional(\App\Models\Port::find($fromId))->name;
+        $toName = optional(\App\Models\Port::find($toId))->name;
+
+        if ($fromIdx === 0 && $toIdx === $waypointIds->count() - 1) {
+            echo "$fromName → ... → $toName";
+        } elseif ($fromIdx === 0) {
+            echo "$fromName → ... → $toName → ...";
+        } elseif ($toIdx === $waypointIds->count() - 1) {
+            echo "... → $fromName → ... → $toName";
+        } else {
+            echo "... → $fromName → ... → $toName → ...";
+        }
+    } else {
+        echo optional($rota->startPort)->name . " → " . optional($rota->endPort)->name;
+    }
+@endphp
+    
+                            </td>
+                            <td>{{ $rota->available_capacity ?? 'N/A' }} kg</td>
+                            <td>{{ number_format($rota->price, 2) }} {{ $rota->currency_type ?? 'TL' }}</td>
+                            <td>
+                                Kalkış: {{ optional($rota->departure_date)->format('d.m.Y') }}<br>
+                                Varış: {{ optional($rota->arrival_date)->format('d.m.Y') }}
+                            </td>
+                            <td>{{ optional($rota->user)->name ?? 'Bilinmiyor' }}</td>
+                            <td>
+                            <form action="{{ route('yukler.request_match', ['yuk' => $yuk->id, 'gemiRoute' => $rota->id]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>Eşleştir
+                                    </button>
+                                </form>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="alert alert-info">Bu yük için eşleşebilecek uygun rota bulunamadı.</div>
+            @endif
         </div>
     </div>
 </div>
@@ -288,13 +204,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h6 class="text-muted mb-2">Rota Başlığı</h6>
-                        <p class="mb-3">{{ $yuk->matchedGemiRoute->title }}</p>
+                        <p class="mb-3">{{ optional($yuk->matchedGemiRoute)->title ?? 'Belirtilmemiş' }}</p>
                         
                         <h6 class="text-muted mb-2">Rota</h6>
-                        <p class="mb-3">{{ $yuk->matchedGemiRoute->start_location }} → {{ $yuk->matchedGemiRoute->end_location }}</p>
+                        <p class="mb-3">
+                            {{ optional($yuk->matchedGemiRoute->startPort)->name ?? '?' }} →
+                            {{ optional($yuk->matchedGemiRoute->endPort)->name ?? '?' }}
+</p>
+
                         
                         <h6 class="text-muted mb-2">Kapasite</h6>
-                        <p class="mb-3">{{ number_format($yuk->matchedGemiRoute->available_capacity, 2) }} kg</p>
+                        <p class="mb-3">{{ optional($yuk->matchedGemiRoute)->available_capacity ? number_format($yuk->matchedGemiRoute->available_capacity, 2) : 'Belirtilmemiş' }} kg</p>
                     </div>
                     <div class="col-md-6">
                         <h6 class="text-muted mb-2">Fiyat</h6>
@@ -307,7 +227,8 @@
                         </p>
                         
                         <h6 class="text-muted mb-2">Gemi Sahibi</h6>
-                        <p class="mb-3">{{ $yuk->matchedGemiRoute->user->name }}</p>
+                        <p class="mb-3">{{ optional(optional($yuk->matchedGemiRoute)->user)->name ?? 'Bilinmiyor' }}</p>
+
                     </div>
                 </div>
                 
@@ -338,9 +259,11 @@
                                 </form>
                             @endif
                             
-                            <a href="{{ route('gemi_routes.show', $yuk->matchedGemiRoute) }}" class="btn btn-outline-primary">
-                                <i class="bi bi-eye me-2"></i>Rotayı Görüntüle
-                            </a>
+                            @if($yuk->matchedGemiRoute)
+                                <a href="{{ route('gemi_routes.show', $yuk->matchedGemiRoute) }}" class="btn btn-outline-primary">
+                                    <i class="bi bi-eye me-2"></i>Rotayı Görüntüle
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

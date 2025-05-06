@@ -115,11 +115,17 @@ class YukController extends Controller
         if (auth()->id() !== $yuk->user_id) {
             abort(403); // Yetkisiz erişim
         }
+        $yuk->load(['matchedGemiRoute.user']);
         $startPort = \App\Models\Port::find($yuk->from_location);
         $endPort = \App\Models\Port::find($yuk->to_location);
         // Use the matching service to find compatible routes
         $matchingService = app(ShipCargoMatchingService::class);
         $matchingRoutes = app(ShipCargoMatchingService::class)->findMatchingShipsForCargo($yuk);
+        $matchingRoutes = $matchingService->findMatchingShipsForCargo($yuk)
+    ->reject(function ($rota) use ($yuk) {
+        return $rota->id === $yuk->matched_gemi_route_id;
+    });
+
         $muhtemelRotalar = \App\Models\GemiRoute::where('available_capacity', '>=', $yuk->weight)
         ->whereDate('departure_date', '<=', $yuk->desired_delivery_date)
         ->whereDoesntHave('matchedYukler', function ($q) use ($yuk) {
@@ -221,6 +227,7 @@ class YukController extends Controller
      */
     public function requestMatch(Yuk $yuk, GemiRoute $gemiRoute)
     {
+    
         if (auth()->id() !== $yuk->user_id) {
             return back()->with('error', 'Bu yük için eşleştirme isteği gönderemezsiniz.');
         }
@@ -233,9 +240,11 @@ class YukController extends Controller
             return back()->with('error', 'Gemi kapasitesi yeterli değil.');
         }
     
+        // This is the fixed line - only update match_status, not status
         $yuk->update([
             'matched_gemi_route_id' => $gemiRoute->id,
             'match_status' => 'pending',
+            // Remove the status update to avoid conflicts
         ]);
     
         return back()->with('success', 'Eşleşme talebi gönderildi. Onay bekleniyor.');
@@ -245,35 +254,37 @@ class YukController extends Controller
      * Eşleştirmeyi iptal et.
      */
     public function cancelMatch(Yuk $yuk)
-    {
-        // Sadece yük sahibi veya rota sahibi iptal edebilir
-        $gemiRoute = $yuk->matchedGemiRoute;
-        
-        if (!$gemiRoute || (Auth::id() !== $yuk->user_id && Auth::id() !== $gemiRoute->user_id)) {
-            return redirect()->route('yukler.show', $yuk)
-                ->with('error', 'Bu eşleştirmeyi iptal etme yetkiniz yok.');
-        }
+{
+    $yuk->load('matchedGemiRoute');
 
-        // Eşleştirmenin durumunu kontrol et
-        if ($yuk->status !== 'matched') {
-            return redirect()->route('yukler.show', $yuk)
-                ->with('error', 'Bu yük zaten eşleştirilmemiş.');
-        }
+    $gemiRoute = $yuk->matchedGemiRoute;
 
-        // Gemi rotasının kapasitesini geri yükle
-        $gemiRoute->update([
-            'available_capacity' => $gemiRoute->available_capacity + $yuk->weight,
-        ]);
-
-        // Eşleştirmeyi kaldır
-        $yuk->update([
-            'status' => 'active',
-            'matched_gemi_route_id' => null,
-        ]);
-
+    if (!$gemiRoute || (Auth::id() !== $yuk->user_id && Auth::id() !== $gemiRoute->user_id)) {
         return redirect()->route('yukler.show', $yuk)
-            ->with('success', 'Eşleştirme başarıyla iptal edildi.');
+            ->with('error', 'Bu eşleştirmeyi iptal etme yetkiniz yok.');
     }
+
+    if (!in_array($yuk->match_status, ['pending', 'confirmed'])) {
+        return redirect()->route('yukler.show', $yuk)
+            ->with('error', 'Bu yük zaten eşleştirilmemiş.');
+    }
+
+    // Kapasiteyi geri yükle
+    $gemiRoute->update([
+        'available_capacity' => $gemiRoute->available_capacity + $yuk->weight,
+    ]);
+
+    // Eşleşmeyi kaldır
+    $yuk->update([
+        'status' => 'active',
+        'matched_gemi_route_id' => null,
+        'match_status' => 'Eşleşmemiş',
+    ]);
+
+    return redirect()->route('yukler.show', $yuk)
+        ->with('success', 'Eşleştirme başarıyla iptal edildi.');
+}
+
     
     /**
      * Teslimati tamamla.

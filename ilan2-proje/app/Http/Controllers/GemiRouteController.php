@@ -58,7 +58,6 @@ class GemiRouteController extends Controller
             return redirect()->route('gemi_routes.index')
                 ->with('error', 'Rota eklemek için gemici profilinizi tamamlamanız gerekiyor.');
         }
-        dd($request->all());
         $shipId = $request->ship_id; // Kullanıcı formdan seçtiyse
 
         $existingRoute = GemiRoute::where('ship_id', $shipId)
@@ -71,12 +70,19 @@ class GemiRouteController extends Controller
 if ($existingRoute) {
     return back()->with('error', 'Bu gemi için belirtilen tarihler arasında zaten bir rota mevcut.');
 }
+$cleanedWayPoints = array_values(array_filter($request->way_points ?? [], function ($item) {
+    return !empty($item['port_id']) && !empty($item['date']);
+}));
+$request->merge([
+    'way_points' => $cleanedWayPoints
+]);
+
 
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'start_location' => 'required|string|max:255',
-            'end_location' => 'required|string|max:255',
+            'start_location' => 'required|integer|exists:ports,id',
+            'end_location' => 'required|integer|exists:ports,id',
             'way_points' => 'nullable|array',
             'way_points.*.port_id' => 'required|integer',
             'way_points.*.date' => 'required|date',
@@ -94,21 +100,6 @@ if ($existingRoute) {
             return !empty($item['port_id']) && !empty($item['date']);
         }));
 
-        \Log::debug('Store request data', [
-            'user_id' => Auth::id(),
-            'ship_id' => $request->ship_id,
-            'title' => $request->title,
-            'start_location' => $request->start_location,
-            'end_location' => $request->end_location,
-            'way_points' => $request->way_points,
-            'available_capacity' => $request->available_capacity,
-            'price' => $request->price,
-            'departure_date' => $request->departure_date,
-            'arrival_date' => $request->arrival_date,
-            'description' => $request->description,
-            'weight_type' => $request->weight_type,
-            'currency_type' => $request->currency_type,
-        ]);
 
         $gemiRoute = GemiRoute::create([
             'user_id' => Auth::id(),

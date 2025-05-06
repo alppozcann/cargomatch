@@ -30,6 +30,7 @@ class Yuk extends Model
         'currency', // Para birimi
         'weight_unit', // Ağırlık birimi
         'shipping_date', // Gönderim tarihi
+        'match_status', // Eşleşme durumu (matched, unmatched)
     ];
 
     /**
