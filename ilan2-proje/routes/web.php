@@ -10,6 +10,7 @@ use App\Http\Controllers\YukController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,3 +107,19 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/cargo', [AdminController::class, 'cargo'])->name('admin.cargo');
     Route::get('/routes', [AdminController::class, 'routes'])->name('admin.routes');
 });
+
+Route::post('/notifications/{notification}/mark-as-read', function (Request $request, $notification) {
+    $notif = $request->user()->notifications()->findOrFail($notification);
+    $notif->markAsRead();
+    return back();
+})->name('notifications.markAsRead')->middleware('auth');
+
+Route::post('/notifications/mark-all-as-read', function (Request $request) {
+    $request->user()->unreadNotifications->markAsRead();
+    return back();
+})->name('notifications.markAllAsRead')->middleware('auth');
+
+Route::match(['post', 'delete'], '/notifications/delete-all', function (Request $request) {
+    $request->user()->notifications()->delete();
+    return back();
+})->name('notifications.deleteAll')->middleware('auth');

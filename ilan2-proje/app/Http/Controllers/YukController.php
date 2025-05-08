@@ -9,6 +9,7 @@ use App\Models\GemiRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ShipCargoMatchingService;
+use App\Notifications\CargoMatchRequest;
 
 class YukController extends Controller
 {
@@ -246,6 +247,9 @@ class YukController extends Controller
             'match_status' => 'pending',
             // Remove the status update to avoid conflicts
         ]);
+    
+        $matchScore = 1.0; // or your calculated score
+        $gemiRoute->user->notify(new CargoMatchRequest($gemiRoute, $yuk, $matchScore));
     
         return back()->with('success', 'Eşleşme talebi gönderildi. Onay bekleniyor.');
     }
