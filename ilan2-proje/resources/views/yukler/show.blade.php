@@ -61,10 +61,6 @@
 
                     </div>
                     <div class="mb-3">
-                        <h6 class="text-muted mb-2">Teklif Edilen Fiyat</h6>
-                        <p class="mb-0">{{ number_format($yuk->proposed_price, 2) }} TL</p>
-                    </div>
-                    <div class="mb-3">
                         <h6 class="text-muted mb-2">İstenen Teslimat Tarihi</h6>
                         <p class="mb-0">{{ $yuk->desired_delivery_date?->format('d.m.Y') ?? 'Belirtilmemiş' }}</p>
 

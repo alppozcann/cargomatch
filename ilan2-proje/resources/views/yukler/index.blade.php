@@ -24,7 +24,6 @@
                     <div class="card h-100 shadow-sm border-0 rounded-lg hover-card">
                         <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0 text-truncate" style="max-width: 70%;">{{ $yuk->title }}</h5>
-                            <span class="badge bg-primary rounded-pill px-3 py-2">{{ number_format($yuk->proposed_price, 2) }} TL</span>
                         </div>
                         <div class="card-body">
                             <div class="mb-3">

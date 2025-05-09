@@ -57,13 +57,14 @@ class CargoMatchRequest extends Notification implements ShouldQueue
         ];
     }
     public function toDatabase($notifiable)
-{
-    return [
-        'gemi_route_id' => $this->gemiRoute->id,
-        'yuk_id' => $this->yuk->id,
-        'match_score' => $this->matchScore,
-        'message' => 'Yeni yük eşleşme talebi (' . number_format($this->matchScore * 100, 1) . '%)',
-        'type' => 'cargo_match_request'
-    ];
-}
+    {
+        return [
+            'gemi_route_id' => $this->gemiRoute->id,
+            'yuk_id' => $this->yuk->id,
+            'match_score' => $this->matchScore,
+            'message' => 'Rota "' . $this->gemiRoute->title . '" için yeni bir yük ilanı eşleşmesi var.',
+            'type' => 'cargo_match_request',
+            'url' => url('/gemi-routes/' . $this->gemiRoute->id)
+        ];
+    }
 }

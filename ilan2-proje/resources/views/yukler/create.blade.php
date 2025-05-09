@@ -66,23 +66,6 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-4">
-                                <label for="proposed_price" class="form-label">Teklif Edilen Fiyat</label>
-                                <div class="input-group">
-                                <input type="number" step="0.01" class="form-control @error('proposed_price') is-invalid @enderror" id="proposed_price" name="proposed_price" value="{{ old('proposed_price') }}" required>
-                                    <div class="input-group-text p-0">
-                                        <select name="currency" id="currency" class="form-select form-select-sm border-0" style="width: 85px;">
-                                            <option value="TRY" {{ old('currency') == 'TRY' ? 'selected' : '' }}>₺</option>
-                                            <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>$</option>
-                                            <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>€</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                @error('proposed_price')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
                             <div class="row">
                         <div class="col-md-6 mb-5">
                             <label for="departure_port" class="form-label">Başlangıç Limanı</label>

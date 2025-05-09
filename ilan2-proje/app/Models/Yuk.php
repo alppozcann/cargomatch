@@ -17,12 +17,11 @@ class Yuk extends Model
     protected $fillable = [
         'user_id',
         'title', // İlan başlığı
-        'yuk_type', // Yük türü
+        'yuk_type', // Yük türü         
         'weight', // Ağırlık (kg)
         'dimensions', // Boyutlar (JSON formatında - en, boy, yükseklik)
         'from_location', // Yükün alınacağı yer
         'to_location', // Yükün teslim edileceği yer
-        'proposed_price', // Teklif edilen fiyat
         'desired_delivery_date', // İstenen teslimat tarihi
         'description', // Detaylı açıklama
         'status', // İlan durumu (active, matched, completed, cancelled)

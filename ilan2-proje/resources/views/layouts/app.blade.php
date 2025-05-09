@@ -98,12 +98,12 @@
                                     </form>
                                 @endif
                                 @if($allCount > 0)
-                                    <form method="POST" action="{{ route('notifications.deleteAll') }}" onsubmit="return confirm('Tüm bildirimleri silmek istediğinize emin misiniz?');" class="mb-3">
+                                    <form method="POST" action="{{ route('notifications.deleteAll') }}" onsubmit="return confirm('Tüm bildirimleri silmek istediğinize emin misiniz?');" class="d-inline-block mb-0">
                                         @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">
-                                                <i class="bi bi-trash"></i> Bildirimleri Sil
-                                            </button>
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger px-2 py-1 d-inline-flex align-items-center">
+                                            <i class="bi bi-trash me-1"></i> Sil
+                                        </button>
                                     </form>
                                 @endif
                             </li>
@@ -111,9 +111,13 @@
                                 <li class="dropdown-item px-3 py-2 {{ $notification->read_at ? '' : 'bg-warning-subtle' }} border-bottom">
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <div class="fw-semibold mb-1">{{ $notification->data['message'] ?? 'Yeni bildirim' }}</div>
+                                        <div class="fw-semibold mb-1 text-wrap" style="word-break: break-word; white-space: normal;">
+    {{ $notification->data['message'] ?? 'Yeni bildirim' }}
+</div>
                                             @if(isset($notification->data['yuk_id']))
-                                                <a href="{{ url('/yukler/' . $notification->data['yuk_id']) }}" class="btn btn-sm btn-outline-primary mt-1">Yüke Git</a>
+                                            <a href="{{ $notification->data['url'] }}" class="btn btn-sm btn-outline-primary mt-1">
+    Ayrıntılara Git
+</a>
                                             @endif
                                             <div class="text-muted small mt-1">{{ $notification->created_at->diffForHumans() }}</div>
                                         </div>

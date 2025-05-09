@@ -53,14 +53,6 @@
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label for="proposed_price" class="form-label">Teklif Edilen Fiyat (TL)</label>
-                                <input type="number" step="0.01" class="form-control @error('proposed_price') is-invalid @enderror" id="proposed_price" name="proposed_price" value="{{ old('proposed_price', $yuk->proposed_price) }}" required>
-                                @error('proposed_price')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-6 mb-4">
                                 <label for="from_location" class="form-label">Nereden</label>
                                 <input type="text" class="form-control @error('from_location') is-invalid @enderror" id="from_location" name="from_location" value="{{ old('from_location', $yuk->from_location) }}" required>
                                 @error('from_location')

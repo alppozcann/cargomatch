@@ -69,7 +69,7 @@ class YukController extends Controller
             'height' => 'nullable|numeric|min:0',
             'from_location' => 'required|string|max:255',
             'to_location' => 'required|string|max:255',
-            'proposed_price' => 'required|numeric|min:0',
+            'proposed_price' => 'nullable|numeric',
             'desired_delivery_date' => 'required|date',
             'description' => 'nullable|string',
             'currency' => 'required|string|max:3',
