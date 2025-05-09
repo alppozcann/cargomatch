@@ -7,7 +7,7 @@
         font-family: 'Poppins', sans-serif;
     }
     .dashboard-welcome-card {
-        background: linear-gradient(120deg, #6366f1 0%, #60a5fa 100%);
+        background: linear-gradient(120deg,rgb(0, 4, 250) 0%, rgb(0, 0, 0) 100%);
         color: #fff;
         border-radius: 18px;
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.13);
@@ -35,7 +35,7 @@
     }
     .dashboard-stats .card-title {
         font-size: 1.1rem;
-        color: #6366f1;
+        color: rgb(0, 4, 250);
     }
     .dashboard-stats .fw-bold {
         font-size: 2.1rem;
@@ -46,20 +46,20 @@
         padding: 0.7rem 1.5rem;
         border-radius: 10px;
         font-weight: 600;
-        background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+        background: linear-gradient(135deg,rgb(0, 162, 255), #3b82f6);
         color: #fff;
         border: none;
         box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
         transition: background 0.2s, color 0.2s;
     }
     .dashboard-action-btn:hover {
-        background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%);
+        background: linear-gradient(135deg, #3b82f6,rgb(0, 162, 255));
         color: #fff;
     }
     .dashboard-rotalar .card {
         border-radius: 14px;
         border: none;
-        box-shadow: 0 2px 10px 0 rgba(99, 102, 241, 0.07);
+        box-shadow: 0 2px 10px 0 rgba(99, 102, 24   1, 0.07);
         margin-bottom: 1.2rem;
         transition: box-shadow 0.2s;
     }
@@ -130,30 +130,37 @@
             </a>
         </div>
         @forelse($rotalar as $rota)
-            <div class="card">
-                <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
-                    <div>
-                        <h5 class="fw-bold mb-1">{{ $rota->start_port_name }} → {{ $rota->end_port_name }}</h5>
-                        <p class="text-muted mb-0">
-                            Kapasite: {{ $rota->available_capacity }} {{$rota->weight_type}} |
-                            Kalkış Zamanı: {{ $rota->departure_date }} |
-                            Durum: 
-                            @if($rota->durum == 'tamamlandı')
-                                <span class="badge bg-success">Tamamlandı</span>
-                            @elseif($rota->durum == 'onaylandı')
-                                <span class="badge bg-warning text-dark">Onaylandı</span>
-                            @else
-                                <span class="badge bg-secondary">Bekliyor</span>
-                            @endif
-                        </p>
-                    </div>
-                    <div class="text-end mt-3 mt-md-0">
-                        <a href="{{ route('gemi_routes.show', $rota->id) }}" class="btn btn-outline-secondary btn-sm">
-                            Detaylar
-                        </a>
+        <div class="card mb-3 shadow-sm border-0 rounded-4">
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                <div class="mb-2 mb-md-0">
+                    <h5 class="fw-bold text-primary">{{ $rota->title }}</h5>
+                    <div class="text-muted small">
+                        @if(!empty($rota->way_points) && count($rota->way_points) > 0)
+                            {{ $rota->start_port_name }} → … → {{ $rota->end_port_name }}
+                        @else
+                            {{ $rota->start_port_name }} → {{ $rota->end_port_name }}
+                        @endif
+                        <br>
+                            Kapasite: <strong>{{ $rota->available_capacity }} {{ $rota->weight_type }}</strong> |
+                            Kalkış: {{ \Carbon\Carbon::parse($rota->departure_date)->format('d-m-Y H:i') }}
+                        <br>
+                        Durum:
+                        @if($rota->status == 'tamamlandı')
+                            <span class="badge bg-success">Tamamlandı</span>
+                        @elseif($rota->status == 'onaylandı')
+                            <span class="badge bg-warning text-dark">Onaylandı</span>
+                        @else
+                            <span class="badge bg-secondary">Bekliyor</span>
+                        @endif
                     </div>
                 </div>
+                <div class="text-md-end">
+                    <a href="{{ route('gemi_routes.show', $rota->id) }}" class="btn btn-sm btn-outline-primary px-3 rounded-3">
+                        Detaylar
+                    </a>
+                </div>
             </div>
+        </div>
         @empty
             <div class="alert alert-info">Henüz bir rotan yok.</div>
         @endforelse

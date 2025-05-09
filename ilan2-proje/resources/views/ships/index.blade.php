@@ -15,20 +15,20 @@
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-sm border-0 h-100">
                         <div class="card-body">
-                            <h5 class="fw-bold">{{ $ship->name }}</h5>
-                            <p class="mb-1">
-                                <strong>Plaka Numarası:</strong> {{ $ship->plate_code }}
-                            </p>
-                            <p class="mb-1">
+                            <h5 class="fw-bold mb-3">{{ $ship->ship_name }}</h5>
+                            <div class="mb-2">
+                                <span class="badge bg-light text-dark me-2">Plaka: {{ $ship->plate_code }}</span>
+                                <span class="badge bg-info text-dark">Kapasite: {{ $ship->carrying_capacity }} ton</span>
+                            </div>
+                            <p class="mb-2">
                                 <strong>Taşıyabildiği Yük Türleri:</strong> 
+                                <span class="text-primary">
                                 @if(is_array($ship->load_types))
                                     {{ implode(', ', $ship->load_types) }}
                                 @else
                                     {{ $ship->load_types }}
                                 @endif
-                            </p>
-                            <p class="mb-1">
-                                <strong>Taşıma Kapasitesi:</strong> {{ $ship->carrying_capacity }} ton
+                                </span>
                             </p>
                             <div class="d-flex justify-content-end gap-2 mt-3">
                                 <a href="{{ route('ships.edit', $ship->id) }}" class="btn btn-sm btn-outline-primary">
